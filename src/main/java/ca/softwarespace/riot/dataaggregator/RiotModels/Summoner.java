@@ -1,13 +1,53 @@
 package ca.softwarespace.riot.dataaggregator.RiotModels;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * Author: Steve Mbiele
+ * Date: 5/15/2019
+ */
+
+@Entity
+@Table(name = "summoner")
 public class Summoner {
-    private int profileIconId;
-    private String name;
-    private String puuid;
-    private long summonerLevel;
-    private long revisionDate;
+
+    @Id
     private String id;
+
+    @Column(name = "profile_icon_id")
+    private int profileIconId;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "puuid")
+    private String puuid;
+
+    @Column(name = "summoner_level")
+    private long summonerLevel;
+
+    @Column(name = "revision_date")
+    private long revisionDate;
+
+    @Column(name = "account_id")
     private String accountId;
+
+    public Summoner(String id, int profileIconId, String name, String puuid, long summonerLevel, long revisionDate,
+                    String accountId) {
+        this.id = id;
+        this.profileIconId = profileIconId;
+        this.name = name;
+        this.puuid = puuid;
+        this.summonerLevel = summonerLevel;
+        this.revisionDate = revisionDate;
+        this.accountId = accountId;
+    }
+
+    public Summoner() {
+    }
 
     public int getProfileIconId() {
         return profileIconId;

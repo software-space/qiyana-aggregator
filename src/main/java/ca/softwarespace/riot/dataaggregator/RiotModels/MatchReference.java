@@ -1,14 +1,59 @@
 package ca.softwarespace.riot.dataaggregator.RiotModels;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * Author: Steve Mbiele
+ * Date: 5/15/2019
+ */
+
+@Entity
+@Table(name = "match_reference")
 public class MatchReference {
-    private String lane;
-    private String platformId;
-    private String role;
+
+    @Id
+    @Column(name = "game_id")
     private long gameId;
+
+    @Column(name = "lane")
+    private String lane;
+
+    @Column(name = "platform_id")
+    private String platformId;
+
+    @Column
+    private String role;
+
+    @Column
     private int champion;
+
+    @Column
     private int queue;
+
+    @Column
     private long timestamp;
+
+    @Column
     private int season;
+
+
+    public MatchReference(long gameId, String lane, String platformId, String role, int champion, int queue,
+                          long timestamp, int season) {
+        this.gameId = gameId;
+        this.lane = lane;
+        this.platformId = platformId;
+        this.role = role;
+        this.champion = champion;
+        this.queue = queue;
+        this.timestamp = timestamp;
+        this.season = season;
+    }
+
+    public MatchReference() {
+    }
 
     public String getLane() {
         return lane;

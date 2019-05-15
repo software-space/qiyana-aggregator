@@ -3,14 +3,17 @@ package ca.softwarespace.riot.dataaggregator.services;
 import ca.softwarespace.riot.dataaggregator.RiotModels.MatchList;
 import ca.softwarespace.riot.dataaggregator.RiotModels.Summoner;
 import ca.softwarespace.riot.dataaggregator.Utils.RestClient;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
+
+/**
+ * Author: Steve Mbiele
+ * Date: 5/15/2019
+ */
 
 @Service
 public class NormalGamesAggregationImpl implements AggretionService {

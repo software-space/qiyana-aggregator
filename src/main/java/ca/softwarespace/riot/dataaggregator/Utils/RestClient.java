@@ -3,6 +3,11 @@ package ca.softwarespace.riot.dataaggregator.Utils;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Author: Steve Mbiele
+ * Date: 5/15/2019
+ */
+
 public class RestClient {
     private RestTemplate restTemplate;
     private HttpHeaders httpHeaders;

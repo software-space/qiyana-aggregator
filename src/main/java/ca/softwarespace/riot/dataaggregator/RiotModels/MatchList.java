@@ -1,7 +1,14 @@
 package ca.softwarespace.riot.dataaggregator.RiotModels;
 
+import javax.persistence.Entity;
 import java.util.List;
 
+/**
+ * Author: Steve Mbiele
+ * Date: 5/15/2019
+ */
+
+@Entity
 public class MatchList {
     private List<MatchReference> matches;
     private int totalGames;

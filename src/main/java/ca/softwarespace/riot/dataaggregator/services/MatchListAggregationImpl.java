@@ -12,9 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -36,8 +34,8 @@ public class MatchListAggregationImpl implements AggretionService {
     @Value("${riotgames.api.summoners.byName}")
     private String summonerEndPoint;
 
-    @Value("${riotgames.api.base.summonersName}")
-    private String summonersName;
+//    @Value("${riotgames.api.base.summonersName}")
+//    private String summonersName;
 
     @Value("${riotgames.api.matchlist.byaccount}")
     private String matchListEndPoint;
@@ -45,29 +43,29 @@ public class MatchListAggregationImpl implements AggretionService {
     @Value("${riotgames.api.key}")
     private String apiKey;
 
-    @Autowired
-    private SummonerRepository summonerRepository;
+    private final SummonerRepository summonerRepository;
 
-    @Autowired
-    private MatchListRepository matchListRepository;
+    private final MatchListRepository matchListRepository;
 
-    @Autowired
-    private MatchReferenceRepository matchReferenceRepository;
+    private final MatchReferenceRepository matchReferenceRepository;
 
     private ObjectMapper objectMapper;
 
-    public MatchListAggregationImpl() {
+    public MatchListAggregationImpl(MatchReferenceRepository matchReferenceRepository, MatchListRepository matchListRepository, SummonerRepository summonerRepository) {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        this.matchReferenceRepository = matchReferenceRepository;
+        this.matchListRepository = matchListRepository;
+        this.summonerRepository = summonerRepository;
     }
 
     @Override
-    @Scheduled(fixedDelayString = "${fixedRate.in.milliseconds}")
-    public void getData() {
-        getSummoner();
+//    @Scheduled(fixedDelayString = "${fixedRate.in.milliseconds}")
+    public void getDataBySummonerName(String summonersName) {
+        getSummoner(summonersName);
     }
 
-    private void getSummoner() {
+    private void getSummoner(String summonersName) {
         Summoner summoner;
         RestClient client = new RestClient();
         client.addHeader("X-Riot-Token", apiKey);
@@ -99,10 +97,12 @@ public class MatchListAggregationImpl implements AggretionService {
                 JsonNode jsonMatchReference = json.get("matches");
                 String stringMatchReference = jsonMatchReference.toString();
                 MatchList matchList = objectMapper.readValue(data, MatchList.class);
-                List<MatchReference> matchReferences = objectMapper.readValue(stringMatchReference, new TypeReference<List<MatchReference>>() {
-                });
+                List<MatchReference> matchReferences = objectMapper.readValue(stringMatchReference,
+                        new TypeReference<List<MatchReference>>() {});
+
                 List<MatchReference> toRemove = new ArrayList<>();
                 List<MatchReference> toUpdate = new ArrayList<>();
+
                 matchList.setSummoner(summoner);
                 matchListRepository.save(matchList);
                 for (MatchReference reference : matchReferences) {

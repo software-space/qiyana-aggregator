@@ -1,7 +1,11 @@
 package ca.softwarespace.riot.dataaggregator.RiotModels;
 
-import javax.persistence.Entity;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * Author: Steve Mbiele
@@ -9,19 +13,50 @@ import java.util.List;
  */
 
 @Entity
+@Table(name = "MatchList")
 public class MatchList {
-    private List<MatchReference> matches;
+
+    @Id
+    @Column(name = "id")
+    @JsonIgnore
+    @GeneratedValue(generator = "matchlist_generator")
+    @SequenceGenerator(
+            name = "matchlist_generator",
+            sequenceName = "matchlist_sequence",
+            initialValue = 1000
+    )
+    private long id;
+
+    @Column(name = "total_games")
     private int totalGames;
+
+    @Column(name = "start_index")
     private int startIndex;
+
+    @Column(name = "end_index")
     private int endIndex;
 
-    public List<MatchReference> getMatches() {
-        return matches;
-    }
+    @OneToOne
+    @JoinColumn(name = "summoner_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Summoner summoner;
 
-    public void setMatches(List<MatchReference> matches) {
-        this.matches = matches;
-    }
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "MatchList_MatchRef",
+//            joinColumns = @JoinColumn(name = "matchList_id",
+//                    referencedColumnName = "id", nullable = false),
+//            inverseJoinColumns = @JoinColumn(name = "game_id", referencedColumnName = "game_id"
+//                    , nullable = false))
+//    private Collection<MatchReference> matchReferences;
+
+//    public Collection<MatchReference> getMatchReferences() {
+//        return matchReferences;
+//    }
+//
+//    public void setMatchReferences(Collection<MatchReference> matches) {
+//        this.matchReferences = matches;
+//    }
 
     public int getTotalGames() {
         return totalGames;
@@ -45,5 +80,33 @@ public class MatchList {
 
     public void setEndIndex(int endIndex) {
         this.endIndex = endIndex;
+    }
+
+    public Summoner getSummoner() {
+        return summoner;
+    }
+
+    public void setSummoner(Summoner summoner) {
+        this.summoner = summoner;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MatchList matchList = (MatchList) o;
+        return id == matchList.id &&
+                totalGames == matchList.totalGames &&
+                startIndex == matchList.startIndex &&
+                endIndex == matchList.endIndex &&
+                summoner.getId().equals(matchList.getSummoner().getId());
     }
 }

@@ -11,7 +11,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "summoner")
+@Table(name = "Summoner")
 public class Summoner {
 
     @Id

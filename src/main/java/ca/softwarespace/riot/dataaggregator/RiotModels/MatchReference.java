@@ -1,9 +1,9 @@
 package ca.softwarespace.riot.dataaggregator.RiotModels;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Author: Steve Mbiele
@@ -11,7 +11,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "match_reference")
+@Table(name = "MatchReference")
 public class MatchReference {
 
     @Id
@@ -38,6 +38,9 @@ public class MatchReference {
 
     @Column
     private int season;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<MatchList> matchLists;
 
 
     public MatchReference(long gameId, String lane, String platformId, String role, int champion, int queue,
@@ -117,5 +120,20 @@ public class MatchReference {
 
     public void setSeason(int season) {
         this.season = season;
+    }
+
+    public List<MatchList> getMatchLists() {
+        return matchLists;
+    }
+
+    public void setMatchLists(List<MatchList> matchLists) {
+        this.matchLists = matchLists;
+    }
+
+    public void addMatchList(MatchList matchList){
+        if(this.matchLists == null){
+            this.matchLists = new ArrayList<MatchList>();
+        }
+        this.matchLists.add(matchList);
     }
 }

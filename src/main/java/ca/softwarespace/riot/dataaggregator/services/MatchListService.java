@@ -35,7 +35,7 @@ public class MatchListService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchListService.class);
 
-    @Value("${riotgames.api.baseUrl}")
+    @Value("${riotgames.api.baseUrlNa}")
     private String baseUrl;
 
     @Value("${riotgames.api.summoners.byName}")

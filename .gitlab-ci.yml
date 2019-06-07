@@ -32,6 +32,7 @@ variables:
   # when running from the command line.
   # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS_TEST: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true -DargLine=-Dspring.profiles.active=test"
+  HEROKU_API_KEY: "e1129e87-39a5-4bbb-afbc-43b37a2903ea"
   POSTGRES_DB: riot
   POSTGRES_USER: riot
   POSTGRES_PASSWORD: "gr007,,"

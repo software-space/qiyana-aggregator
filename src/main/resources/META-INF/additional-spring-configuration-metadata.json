@@ -1,0 +1,34 @@
+{
+  "properties": [
+    {
+      "name": "fixedRate.in.milliseconds",
+      "type": "java.lang.String",
+      "description": "Description for fixedRate.in.milliseconds."
+    },
+    {
+      "name": "riotgames.api.baseUrlNa",
+      "type": "java.lang.String",
+      "description": "Description for riotgames.api.baseUrl."
+    },
+    {
+      "name": "riotgames.api.summoners.byName",
+      "type": "java.lang.String",
+      "description": "Description for riotgames.api.summoners.byName."
+    },
+    {
+      "name": "riotgames.api.matchlist.byaccount",
+      "type": "java.lang.String",
+      "description": "Description for riotgames.api.matchlist.byaccount."
+    },
+    {
+      "name": "riotgames.api.base.summonersName",
+      "type": "java.lang.String",
+      "description": "Description for riotgames.api.base.summonersName."
+    },
+    {
+      "name": "riotgames.api.key",
+      "type": "java.lang.String",
+      "description": "Description for riotgames.api.key."
+    }
+  ]
+}

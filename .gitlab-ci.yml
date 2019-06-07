@@ -94,7 +94,7 @@ deploy_prod:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=<api-data-aggregator> --api-key=$HEROKU_API_KEY
+    - dpl --provider=heroku --app=api-data-aggregator --api-key=$HEROKU_API_KEY
   only:
     - master
 
@@ -105,7 +105,7 @@ deploy_dev:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=<api-data-aggregator-dev> --api-key=$HEROKU_API_KEY
+    - dpl --provider=heroku --app=api-data-aggregator-dev --api-key=$HEROKU_API_KEY
   only:
     - develop
 

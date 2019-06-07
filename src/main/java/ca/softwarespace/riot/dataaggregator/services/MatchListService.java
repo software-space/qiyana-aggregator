@@ -12,13 +12,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Author: Steve Mbiele
@@ -26,7 +31,9 @@ import java.util.Optional;
  */
 
 @Service
-public class MatchListAggregationImpl implements AggretionService {
+public class MatchListService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MatchListService.class);
 
     @Value("${riotgames.api.baseUrl}")
     private String baseUrl;
@@ -51,7 +58,7 @@ public class MatchListAggregationImpl implements AggretionService {
 
     private ObjectMapper objectMapper;
 
-    public MatchListAggregationImpl(MatchReferenceRepository matchReferenceRepository, MatchListRepository matchListRepository, SummonerRepository summonerRepository) {
+    public MatchListService(MatchReferenceRepository matchReferenceRepository, MatchListRepository matchListRepository, SummonerRepository summonerRepository) {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         this.matchReferenceRepository = matchReferenceRepository;
@@ -59,30 +66,45 @@ public class MatchListAggregationImpl implements AggretionService {
         this.summonerRepository = summonerRepository;
     }
 
-    @Override
 //    @Scheduled(fixedDelayString = "${fixedRate.in.milliseconds}")
     public void getDataBySummonerName(String summonersName) {
-        getSummoner(summonersName);
+//        getSummoner(summonersName);
     }
 
-    private void getSummoner(String summonersName) {
-        Summoner summoner;
-        RestClient client = new RestClient();
-        client.addHeader("X-Riot-Token", apiKey);
-        client.addHeader("Content-Type", "application/json");
-        client.addHeader("Accept", "*/*");
-        String url = baseUrl + summonerEndPoint + summonersName;
-        try {
-            summoner = this.objectMapper.readValue(client.get(url), Summoner.class);
-            if (!summonerRepository.existsById(summoner.getId()))
-                summonerRepository.save(summoner);
-            getMatchList(summoner);
-        } catch (IOException e) {
-            e.printStackTrace();
+    /**
+     * Retrieves the summoner's data form Riot Games API, saves it in  the data base and return it.
+     *
+     * @param summonersName the summoner's name to fetch.
+     * @return A Summoner object.
+     */
+    @Async
+    public CompletableFuture<Summoner> getSummoner(String summonersName) {
+        Summoner summoner = summonerRepository.findByName(summonersName);
+        if (summoner == null) {
+            RestClient client = new RestClient();
+            client.addHeader("X-Riot-Token", apiKey);
+            client.addHeader("Content-Type", "application/json");
+            client.addHeader("Accept", "*/*");
+            String url = baseUrl + summonerEndPoint + summonersName;
+            try {
+                summoner = this.objectMapper.readValue(client.get(url), Summoner.class);
+                if (!summonerRepository.existsById(summoner.getId()))
+                    summonerRepository.save(summoner);
+                return CompletableFuture.completedFuture(summoner);
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
+        return CompletableFuture.completedFuture(summoner);
     }
 
-    private void getMatchList(Summoner summoner) {
+    /**
+     * Retrieves the match list of a summoner from the Riot Games API and saves it in the Database.
+     *
+     * @param summoner the summoner's we are fetching the match list.
+     */
+    @Async
+    public void fetchMatchList(Summoner summoner) {
         RestClient client = new RestClient();
         client.addHeader("X-Riot-Token", apiKey);
         client.addHeader("Content-Type", "application/json");
@@ -163,11 +185,26 @@ public class MatchListAggregationImpl implements AggretionService {
                 matchReferenceRepository.saveAll(matchReferences);
                 matchReferenceRepository.saveAll(toUpdate);
             }
-            System.out.println("done");
+            LOGGER.info("Done");
 
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(2000);
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Retrieves the match list of a summoner from the Riot Games API and saves it in the Database.
+     *
+     * @param summonersName the summoner's name to fetch match list from.
+     */
+    @Async
+    public void fetchMatchList(String summonersName) {
+        Summoner summoner;
+        try {
+            summoner = getSummoner(summonersName).get();
+            fetchMatchList(summoner);
+        } catch (InterruptedException | ExecutionException e) {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -177,20 +214,20 @@ public class MatchListAggregationImpl implements AggretionService {
         private MatchList matchList;
         private List<MatchReference> matchReferences;
 
-        public DoRequest(RestClient client, String url) {
+        DoRequest(RestClient client, String url) {
             this.client = client;
             this.url = url;
         }
 
-        public MatchList getMatchList() {
+        MatchList getMatchList() {
             return matchList;
         }
 
-        public List<MatchReference> getMatchReferences() {
+        List<MatchReference> getMatchReferences() {
             return matchReferences;
         }
 
-        public DoRequest invoke() throws IOException {
+        DoRequest invoke() throws IOException {
             String data = client.get(url);
             JsonNode json = objectMapper.readTree(data);
             JsonNode jsonMatchReference = json.get(Constants.MATCHES_NODE_IN_MATCH_LIST);

@@ -6,7 +6,7 @@
       "description": "Description for fixedRate.in.milliseconds."
     },
     {
-      "name": "riotgames.api.baseUrl",
+      "name": "riotgames.api.baseUrlNa",
       "type": "java.lang.String",
       "description": "Description for riotgames.api.baseUrl."
     },

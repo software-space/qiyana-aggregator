@@ -78,7 +78,7 @@ verify:jdk8:
   <<: *verify
   image: maven:3.3.9-jdk-8
 
-packake:
+package:
   image: maven:3.3.9-jdk-8
   stage: package
   script:
@@ -96,6 +96,7 @@ deploy_prod:
     - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=api-data-aggregator --api-key=$HEROKU_API_KEY
+  when: manual
   only:
     - master
 
@@ -107,39 +108,6 @@ deploy_dev:
     - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=api-data-aggregator-dev --api-key=$HEROKU_API_KEY
+  when: manual
   only:
     - develop
-
-    # For `master` branch run `mvn deploy` automatically.
-# Here you need to decide whether you want to use JDK7 or 8.
-# To get this working you need to define a volume while configuring your gitlab-ci-multi-runner.
-# Mount your `settings.xml` as `/root/.m2/settings.xml` which holds your secrets.
-# See https://maven.apache.org/settings.html
-# TODO-Steve: I commented this because I do not know yet how to implement this properly.
-# deploy:jdk8:
-    # Use stage test here, so the pages job may later pickup the created site.
-#   stage: test
-#   script:
-#     - 'mvn $MAVEN_CLI_OPTS deploy site site:stage'
-#   only:
-#     - master
-    # Archive up the built documentation site.
-#   artifacts:
-#     paths:
-#     - target/staging
-#   image: maven:3.3.9-jdk-8
-
-    # pages:
-#   image: busybox:latest
-#   stage: deploy
-#   script:
-    # Because Maven appends the artifactId automatically to the staging path if you did define a parent pom,
-    # you might need to use `mv target/staging/YOUR_ARTIFACT_ID public` instead.
-#     - mv target/staging public
-#   dependencies:
-#     - deploy:jdk8
-#   artifacts:
-#     paths:
-#     - public
-#   only:
-#     - master

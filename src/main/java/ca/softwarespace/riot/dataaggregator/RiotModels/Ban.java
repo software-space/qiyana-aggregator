@@ -20,5 +20,5 @@ public class Ban {
     private int championId;
 
     @JsonIgnore
-    private TeamStats teamStats
+    private TeamStats teamStats;
 }

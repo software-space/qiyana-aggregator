@@ -5,7 +5,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * Author: Steve Mbiele
@@ -41,22 +40,6 @@ public class MatchList {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Summoner summoner;
-
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "MatchList_MatchRef",
-//            joinColumns = @JoinColumn(name = "matchList_id",
-//                    referencedColumnName = "id", nullable = false),
-//            inverseJoinColumns = @JoinColumn(name = "game_id", referencedColumnName = "game_id"
-//                    , nullable = false))
-//    private Collection<MatchReference> matchReferences;
-
-//    public Collection<MatchReference> getMatchReferences() {
-//        return matchReferences;
-//    }
-//
-//    public void setMatchReferences(Collection<MatchReference> matches) {
-//        this.matchReferences = matches;
-//    }
 
     public int getTotalGames() {
         return totalGames;

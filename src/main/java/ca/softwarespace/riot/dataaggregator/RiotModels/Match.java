@@ -40,10 +40,10 @@ public class Match {
     @Column(name = "game_type")
     private String gameType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     private List<TeamStats> teams;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     private List<Participant> participants;
 
     @Column(name = "game_duration")

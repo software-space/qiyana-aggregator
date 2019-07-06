@@ -3,7 +3,6 @@ package ca.softwarespace.riot.dataaggregator.RiotModels;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 
@@ -27,12 +26,10 @@ public class ParticipantIdentity {
     private long id;
 
     @OneToOne
-    @JoinColumn(name = "summoner_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Summoner player;
 
     @OneToOne
-    @JoinColumn(name = "summoner_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore
     private Match match;

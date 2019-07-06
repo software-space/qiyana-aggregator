@@ -1,7 +1,7 @@
-package ca.softwarespace.riot.dataaggregator.Repositories;
+package ca.softwarespace.qiyanna.dataaggregator.Repositories;
 
-import ca.softwarespace.riot.dataaggregator.RiotModels.MatchList;
-import ca.softwarespace.riot.dataaggregator.RiotModels.Summoner;
+import ca.softwarespace.qiyanna.dataaggregator.RiotModels.MatchList;
+import ca.softwarespace.qiyanna.dataaggregator.RiotModels.Summoner;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

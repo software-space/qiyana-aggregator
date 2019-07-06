@@ -1,4 +1,4 @@
-package ca.softwarespace.riot.dataaggregator.RiotModels;
+package ca.softwarespace.qiyanna.dataaggregator.RiotModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;

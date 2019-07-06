@@ -1,4 +1,4 @@
-package ca.softwarespace.riot.dataaggregator.Utils;
+package ca.softwarespace.qiyanna.dataaggregator.Utils;
 
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;

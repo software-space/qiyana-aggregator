@@ -8,3 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2019-07-23
 ### Added
+- Added some of the models form the Match end point notably the /lol/match/v4/matches/{matchId} and  /lol/match/v4/matchlists/by-account/{encryptedAccountId}
+- Added the the summoner end point models
+- Create a Service to fetch mach lists for demo purposes.

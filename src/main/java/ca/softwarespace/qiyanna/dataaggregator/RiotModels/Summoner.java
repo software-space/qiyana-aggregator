@@ -1,4 +1,4 @@
-package ca.softwarespace.riot.dataaggregator.RiotModels;
+package ca.softwarespace.qiyanna.dataaggregator.RiotModels;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

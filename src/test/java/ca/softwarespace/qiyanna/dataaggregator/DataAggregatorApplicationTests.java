@@ -1,4 +1,4 @@
-package ca.softwarespace.riot.dataaggregator;
+package ca.softwarespace.qiyanna.dataaggregator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

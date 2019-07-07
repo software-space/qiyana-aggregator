@@ -1,6 +1,6 @@
-package ca.softwarespace.qiyanna.dataaggregator.controllers;
+package ca.softwarespace.riot.dataaggregator.controllers;
 
-import ca.softwarespace.qiyanna.dataaggregator.services.MatchListService;
+import ca.softwarespace.riot.dataaggregator.services.MatchListService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

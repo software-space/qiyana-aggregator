@@ -1,4 +1,4 @@
-package ca.softwarespace.qiyanna.dataaggregator.services;
+package ca.softwarespace.riot.dataaggregator.services;
 
 /**
  * Author: Steve Mbiele

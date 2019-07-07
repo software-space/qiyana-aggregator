@@ -1,13 +1,13 @@
-package ca.softwarespace.qiyanna.dataaggregator.services;
+package ca.softwarespace.riot.dataaggregator.services;
 
-import ca.softwarespace.qiyanna.dataaggregator.Repositories.MatchListRepository;
-import ca.softwarespace.qiyanna.dataaggregator.Repositories.MatchReferenceRepository;
-import ca.softwarespace.qiyanna.dataaggregator.Repositories.SummonerRepository;
-import ca.softwarespace.qiyanna.dataaggregator.RiotModels.MatchList;
-import ca.softwarespace.qiyanna.dataaggregator.RiotModels.Summoner;
-import ca.softwarespace.qiyanna.dataaggregator.Utils.Constants;
-import ca.softwarespace.qiyanna.dataaggregator.Utils.RestClient;
-import ca.softwarespace.qiyanna.dataaggregator.RiotModels.MatchReference;
+import ca.softwarespace.riot.dataaggregator.Repositories.MatchListRepository;
+import ca.softwarespace.riot.dataaggregator.Repositories.MatchReferenceRepository;
+import ca.softwarespace.riot.dataaggregator.Repositories.SummonerRepository;
+import ca.softwarespace.riot.dataaggregator.RiotModels.MatchList;
+import ca.softwarespace.riot.dataaggregator.RiotModels.MatchReference;
+import ca.softwarespace.riot.dataaggregator.RiotModels.Summoner;
+import ca.softwarespace.riot.dataaggregator.Utils.Constants;
+import ca.softwarespace.riot.dataaggregator.Utils.RestClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;

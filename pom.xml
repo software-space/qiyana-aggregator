@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>ca.softwarespace.qiyanna</groupId>
+    <groupId>ca.softwarespace.riot</groupId>
     <artifactId>data-aggregator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>data-aggregator</name>
@@ -29,6 +29,10 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

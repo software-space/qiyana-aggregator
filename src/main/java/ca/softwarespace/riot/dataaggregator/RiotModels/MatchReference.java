@@ -1,4 +1,4 @@
-package ca.softwarespace.qiyanna.dataaggregator.RiotModels;
+package ca.softwarespace.riot.dataaggregator.RiotModels;
 
 import javax.persistence.*;
 import java.util.ArrayList;

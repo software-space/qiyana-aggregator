@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-##[1.0.0] - 2019-07-09
+##[0.1.0] - 2019-07-09
 - Removed all dependencies on postgresSQL,
 - Added the Orianna as an api wrapper
 - Removed all the previous models as they are not needed anymore

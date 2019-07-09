@@ -1,3 +1,5 @@
+[![MIT Licensed](https://img.shields.io/badge/license-Apache2.0-green.svg)](https://github.com/fastboyz/Qiyana-Data-aggregator/blob/master/LICENSE)
+
 This Java project is meant to be a data aggregator for the riot API, The ultimate
 goal is to offer Data aggregation and offer and API that will deliver it. 
 Since the official Riot API does not have general stats, and the only other option

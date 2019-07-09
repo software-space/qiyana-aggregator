@@ -11,3 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added some of the models form the Match end point notably the /lol/match/v4/matches/{matchId} and  /lol/match/v4/matchlists/by-account/{encryptedAccountId}
 - Added the the summoner end point models
 - Create a Service to fetch mach lists for demo purposes.
+
+## [Unreleased]
+
+##[1.0.0] - 2019-07-09
+- Removed all dependencies on postgresSQL,
+- Added the Orianna as an api wrapper
+- Removed all the previous models as they are not needed anymore
+- Changed the README to add new instruction for dev.

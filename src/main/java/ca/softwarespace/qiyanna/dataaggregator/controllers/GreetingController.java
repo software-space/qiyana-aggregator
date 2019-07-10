@@ -1,26 +1,30 @@
 package ca.softwarespace.qiyanna.dataaggregator.controllers;
 
-import ca.softwarespace.qiyanna.dataaggregator.services.MatchListService;
-import com.merakianalytics.orianna.types.core.summoner.Summoner;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import ca.softwarespace.qiyanna.dataaggregator.services.MatchesCollectionService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class GreetingController {
 
-    private MatchListService matchListService;
+    private MatchesCollectionService matchesCollectionService;
 
-    public GreetingController(MatchListService matchListService) {
-        this.matchListService = matchListService;
+    public GreetingController(MatchesCollectionService matchesCollectionService) {
+        this.matchesCollectionService = matchesCollectionService;
     }
 
-    @GetMapping("/{summonerName}")
-    public String greetings(@PathVariable String summonerName) {
-//        matchListService.fetchMatchList("fastboyz");
-//        matchListService.fetchMatchList("maytaro");
-//        matchListService.fetchMatchList("yofranck99");
-        Summoner summoner = matchListService.oriannaTest(summonerName);
-        return  summoner.toJSON();
+    @PostMapping("/{summonerName}")
+    public String greetings(@PathVariable String summonerName, @RequestParam(required = false) String regionName) {
+
+       StringBuilder sb = new StringBuilder();
+       sb.append("Starting aggregation for ");
+       sb.append(summonerName);
+       if(regionName != null){
+           matchesCollectionService.oriannaTest(summonerName, regionName);
+           sb.append(" with region: ").append(regionName);
+       } else {
+           matchesCollectionService.oriannaTest(summonerName);
+           sb.append(" with region: NA");
+       }
+        return  sb.toString();
     }
 }

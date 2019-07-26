@@ -4,6 +4,7 @@ import ca.softwarespace.qiyanna.dataaggregator.services.MatchesCollectionService
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/summoner")
 public class GreetingController {
 
     private MatchesCollectionService matchesCollectionService;

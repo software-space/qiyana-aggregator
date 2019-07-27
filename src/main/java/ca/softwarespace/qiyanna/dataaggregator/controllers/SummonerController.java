@@ -1,32 +1,29 @@
 package ca.softwarespace.qiyanna.dataaggregator.controllers;
 
-import ca.softwarespace.qiyanna.dataaggregator.services.MatchesCollectionService;
-import org.springframework.web.bind.annotation.*;
+import ca.softwarespace.qiyanna.dataaggregator.models.SummonerDto;
+import ca.softwarespace.qiyanna.dataaggregator.services.SummonerService;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/summoner")
 public class SummonerController {
 
-    private MatchesCollectionService matchesCollectionService;
+  private final SummonerService summonerService;
 
-    public SummonerController(MatchesCollectionService matchesCollectionService) {
-        this.matchesCollectionService = matchesCollectionService;
-    }
+  @GetMapping("/{name}")
+  public SummonerDto getSummonerByName(
+      @ApiParam(example = "Marcarrian")
+      @PathVariable String name,
+      @ApiParam(example = "EUW")
+      @RequestParam() String regionName) {
+    return summonerService.getSummonerByName(name, regionName);
+  }
 
-    @PostMapping("/{summonerName}")
-    public String greetings(
-            @PathVariable String summonerName,
-            @RequestParam(required = false) String regionName) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Starting aggregation for ");
-        sb.append(summonerName);
-        if (regionName != null) {
-            matchesCollectionService.oriannaTest(summonerName, regionName);
-            sb.append(" with region: ").append(regionName);
-        } else {
-            matchesCollectionService.oriannaTest(summonerName);
-            sb.append(" with region: NA");
-        }
-        return sb.toString();
-    }
 }

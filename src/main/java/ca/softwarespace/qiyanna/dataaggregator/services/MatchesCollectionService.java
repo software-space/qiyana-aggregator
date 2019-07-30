@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MatchesCollectionService {
 
-  private MatchHistory filterMatchHistory(Summoner summoner) {
+  public MatchHistory filterMatchHistory(Summoner summoner) {
     ArrayList<Queue> queues = new ArrayList<>();
     queues.add(Queue.OVERCHARGE);
     queues.add(Queue.SIEGE);

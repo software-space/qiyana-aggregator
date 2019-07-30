@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder(toBuilder = true)
+@Builder
 public class MatchDto {
 
   private long id;

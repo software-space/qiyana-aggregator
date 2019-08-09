@@ -7,18 +7,22 @@ import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.Queue;
 import com.merakianalytics.orianna.types.common.Region;
 import com.merakianalytics.orianna.types.common.Season;
+import com.merakianalytics.orianna.types.core.match.Match;
 import com.merakianalytics.orianna.types.core.match.MatchHistory;
 import com.merakianalytics.orianna.types.core.match.Participant;
 import com.merakianalytics.orianna.types.core.match.ParticipantStats;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.joda.time.Duration;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,16 +42,23 @@ public class ChampionService {
         .get();
     Map<String, List<ChampionDto>> championsGroupedByName = groupChampionsByName(summoner, matches);
     List<AggregatedChampionDto> champions = aggregateStats(championsGroupedByName);
-
     return CompletableFuture.completedFuture(champions);
   }
 
   private Map<String, List<ChampionDto>> groupChampionsByName(Summoner summoner, MatchHistory matches) {
-    return matches.stream()
-        .flatMap(match -> match.getParticipants().stream())
-        .filter(participant -> participant.getSummoner().getAccountId().equals(summoner.getAccountId()))
-        .map(this::buildChampionDto)
-        .filter(Objects::nonNull)
+    List<ChampionDto> champions = new ArrayList<>();
+    for (Match match : matches) {
+      Duration duration = match.getDuration();
+      Optional<ChampionDto> champion = match.getParticipants().stream()
+          .filter(participant -> participant.getSummoner().getAccountId().equals(summoner.getAccountId()))
+          .map(participant -> this.buildChampionDto(participant, duration))
+          .filter(Objects::nonNull)
+          .findFirst();
+      if (champion.isPresent()) {
+        champions.add(champion.get());
+      }
+    }
+    return champions.stream()
         .collect(Collectors.groupingBy(ChampionDto::getName));
   }
 
@@ -65,8 +76,9 @@ public class ChampionService {
         aggregatedChampionDto.setKills(aggregatedChampionDto.getKills() + champion.getKills());
         aggregatedChampionDto.setDeaths(aggregatedChampionDto.getDeaths() + champion.getDeaths());
         aggregatedChampionDto.setAssists(aggregatedChampionDto.getAssists() + champion.getAssists());
-        aggregatedChampionDto.setCs(aggregatedChampionDto.getCs() + champion.getCs() + champion.getNeutralMinionsKilled());
+        aggregatedChampionDto.setCs(aggregatedChampionDto.getCs() + champion.getCs());
         aggregatedChampionDto.setGold(aggregatedChampionDto.getGold() + champion.getGold());
+        aggregatedChampionDto.setCsPerMin(aggregatedChampionDto.getCsPerMin() + champion.getCsPerMin());
         if (champion.isWinner()) {
           wins++;
         } else {
@@ -78,6 +90,7 @@ public class ChampionService {
       aggregatedChampionDto.setAssists(aggregatedChampionDto.getAssists() / championCountByName);
       aggregatedChampionDto.setCs(aggregatedChampionDto.getCs() / championCountByName);
       aggregatedChampionDto.setGold(aggregatedChampionDto.getGold() / championCountByName);
+      aggregatedChampionDto.setCsPerMin(aggregatedChampionDto.getCsPerMin() / championCountByName);
       aggregatedChampionDto.setPlayed(championCountByName);
       aggregatedChampionDto.setWins(wins);
       aggregatedChampionDto.setLosses(losses);
@@ -85,26 +98,30 @@ public class ChampionService {
       aggregatedChampionDto.setWinrate(winrate);
       champions.add(aggregatedChampionDto);
     }
-
-    return champions;
+    return champions.stream()
+        .sorted(Comparator.comparing(AggregatedChampionDto::getPlayed).reversed())
+        .collect(Collectors.toList());
   }
 
-  private ChampionDto buildChampionDto(Participant participant) {
+  private ChampionDto buildChampionDto(Participant participant, Duration matchDuration) {
     ParticipantStats stats = participant.getStats();
     if (stats == null) { // TODO check why stats are sometimes null
       return null;
     }
+
+    int cs = stats.getCreepScore() + stats.getNeutralMinionsKilled();
+    double matchDurationInMinutes = matchDuration.getStandardMinutes();
+    double csPerMin = cs / matchDurationInMinutes;
 
     return ChampionDto.builder()
         .name(participant.getChampion().getName())
         .kills(stats.getKills())
         .deaths(stats.getDeaths())
         .assists(stats.getAssists())
-        .cs(stats.getCreepScore())
-        .neutralMinionsKilled(stats.getNeutralMinionsKilled())
+        .cs(cs)
         .isWinner(participant.getTeam().isWinner())
         .gold(stats.getGoldEarned())
+        .csPerMin(csPerMin)
         .build();
   }
-
 }

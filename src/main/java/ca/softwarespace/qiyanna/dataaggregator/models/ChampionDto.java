@@ -16,8 +16,8 @@ public class ChampionDto {
   private int kills;
   private int deaths;
   private int assists;
-  private int neutralMinionsKilled;
   private boolean isWinner;
   private int gold;
+  private double csPerMin;
 
 }

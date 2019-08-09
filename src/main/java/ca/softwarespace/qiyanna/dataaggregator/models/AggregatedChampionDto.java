@@ -22,5 +22,5 @@ public class AggregatedChampionDto {
   private double assists;
   private double cs;
   private double gold;
-
+  private double csPerMin;
 }

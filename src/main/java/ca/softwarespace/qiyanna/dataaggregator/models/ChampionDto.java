@@ -12,14 +12,12 @@ import lombok.NoArgsConstructor;
 public class ChampionDto {
 
   private String name;
-//  private int played;
-//  private int wins;
-//  private int losses;
-//  private double winrate;
-//  private double averageCs;
-  private double kills;
-  private double deaths;
-  private double assists;
-//  private double averageGold;
+  private int cs;
+  private int kills;
+  private int deaths;
+  private int assists;
+  private int neutralMinionsKilled;
+  private boolean isWinner;
+  private int gold;
 
 }

@@ -9,6 +9,7 @@ import com.merakianalytics.orianna.types.common.Region;
 import com.merakianalytics.orianna.types.common.Season;
 import com.merakianalytics.orianna.types.core.match.Match;
 import com.merakianalytics.orianna.types.core.match.MatchHistory;
+import com.merakianalytics.orianna.types.core.match.MatchHistory.Builder;
 import com.merakianalytics.orianna.types.core.match.Participant;
 import com.merakianalytics.orianna.types.core.match.ParticipantStats;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
@@ -30,16 +31,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChampionService {
 
-  public CompletableFuture<List<AggregatedChampionDto>> getAllChampionStatsBySummonerName(String summonerName, String regionName) {
+  public CompletableFuture<List<AggregatedChampionDto>> getAllChampionStatsBySummonerName(String summonerName, String championName, String regionName) {
     Region region = RegionUtil.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(summonerName)
         .withRegion(region)
         .get();
     // TODO include queue in request when orianna is updated to have updated queue ids
-    MatchHistory matches = MatchHistory.forSummoner(summoner)
+    Builder matchHistoryBuilder = MatchHistory.forSummoner(summoner)
         .withSeasons(Season.getLatest())
-        .withQueues(Queue.TEAM_BUILDER_RANKED_SOLO) // TODO update with actual ranked solo as soon as orianna gets updated
-        .get();
+        .withQueues(Queue.TEAM_BUILDER_RANKED_SOLO);
+    MatchHistory matches; // TODO update with actual ranked solo as soon as orianna gets updated
+
+    if (championName == null || championName == "") {
+      matches = matchHistoryBuilder.get();
+    } else {
+      matches = matchHistoryBuilder.withChampions(Orianna.championsNamed(championName).get()).get();
+    }
+
     Map<String, List<ChampionDto>> championsGroupedByName = groupChampionsByName(summoner, matches);
     List<AggregatedChampionDto> champions = aggregateStats(championsGroupedByName);
     return CompletableFuture.completedFuture(champions);
@@ -48,6 +56,9 @@ public class ChampionService {
   private Map<String, List<ChampionDto>> groupChampionsByName(Summoner summoner, MatchHistory matches) {
     List<ChampionDto> champions = new ArrayList<>();
     for (Match match : matches) {
+      if (match.isRemake()) {
+        continue;
+      }
       Duration duration = match.getDuration();
       Optional<ChampionDto> champion = match.getParticipants().stream()
           .filter(participant -> participant.getSummoner().getAccountId().equals(summoner.getAccountId()))
@@ -73,24 +84,24 @@ public class ChampionService {
       int wins = 0;
       int losses = 0;
       for (ChampionDto champion : entry.getValue()) {
-        aggregatedChampionDto.setKills(aggregatedChampionDto.getKills() + champion.getKills());
-        aggregatedChampionDto.setDeaths(aggregatedChampionDto.getDeaths() + champion.getDeaths());
-        aggregatedChampionDto.setAssists(aggregatedChampionDto.getAssists() + champion.getAssists());
-        aggregatedChampionDto.setCs(aggregatedChampionDto.getCs() + champion.getCs());
-        aggregatedChampionDto.setGold(aggregatedChampionDto.getGold() + champion.getGold());
-        aggregatedChampionDto.setCsPerMin(aggregatedChampionDto.getCsPerMin() + champion.getCsPerMin());
+        aggregatedChampionDto.setAverageKills(aggregatedChampionDto.getAverageKills() + champion.getKills());
+        aggregatedChampionDto.setAverageDeaths(aggregatedChampionDto.getAverageDeaths() + champion.getDeaths());
+        aggregatedChampionDto.setAverageAssists(aggregatedChampionDto.getAverageAssists() + champion.getAssists());
+        aggregatedChampionDto.setAverageCs(aggregatedChampionDto.getAverageCs() + champion.getCs());
+        aggregatedChampionDto.setAverageGold(aggregatedChampionDto.getAverageGold() + champion.getGold());
+        aggregatedChampionDto.setAverageCsPerMin(aggregatedChampionDto.getAverageCsPerMin() + champion.getCsPerMin());
         if (champion.isWinner()) {
           wins++;
         } else {
           losses++;
         }
       }
-      aggregatedChampionDto.setKills(aggregatedChampionDto.getKills() / championCountByName);
-      aggregatedChampionDto.setDeaths(aggregatedChampionDto.getDeaths() / championCountByName);
-      aggregatedChampionDto.setAssists(aggregatedChampionDto.getAssists() / championCountByName);
-      aggregatedChampionDto.setCs(aggregatedChampionDto.getCs() / championCountByName);
-      aggregatedChampionDto.setGold(aggregatedChampionDto.getGold() / championCountByName);
-      aggregatedChampionDto.setCsPerMin(aggregatedChampionDto.getCsPerMin() / championCountByName);
+      aggregatedChampionDto.setAverageKills(aggregatedChampionDto.getAverageKills() / championCountByName);
+      aggregatedChampionDto.setAverageDeaths(aggregatedChampionDto.getAverageDeaths() / championCountByName);
+      aggregatedChampionDto.setAverageAssists(aggregatedChampionDto.getAverageAssists() / championCountByName);
+      aggregatedChampionDto.setAverageCs(aggregatedChampionDto.getAverageCs() / championCountByName);
+      aggregatedChampionDto.setAverageGold(aggregatedChampionDto.getAverageGold() / championCountByName);
+      aggregatedChampionDto.setAverageCsPerMin(aggregatedChampionDto.getAverageCsPerMin() / championCountByName);
       aggregatedChampionDto.setPlayed(championCountByName);
       aggregatedChampionDto.setWins(wins);
       aggregatedChampionDto.setLosses(losses);

@@ -17,10 +17,10 @@ public class AggregatedChampionDto {
   private int wins;
   private int losses;
   private double winrate;
-  private double kills;
-  private double deaths;
-  private double assists;
-  private double cs;
-  private double gold;
-  private double csPerMin;
+  private double averageKills;
+  private double averageDeaths;
+  private double averageAssists;
+  private double averageCs;
+  private double averageGold;
+  private double averageCsPerMin;
 }

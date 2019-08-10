@@ -20,11 +20,13 @@ public class ChampionController {
 
   @GetMapping("/{summonerName}")
   public List<AggregatedChampionDto> getChampionStatsBySummonerName(
-      @ApiParam(example = "Marcarrian")
+      @ApiParam(example = "Marcarrian", required = true)
       @PathVariable String summonerName,
-      @ApiParam(example = "EUW")
-      @RequestParam String regionName) throws Exception {
-    return championService.getAllChampionStatsBySummonerName(summonerName, regionName).get();
+      @ApiParam(example = "EUW", required = true)
+      @RequestParam String regionName,
+      @ApiParam(example = "Olaf")
+      @RequestParam(required = false) String championName) throws Exception {
+    return championService.getAllChampionStatsBySummonerName(summonerName, championName, regionName).get();
   }
 
 

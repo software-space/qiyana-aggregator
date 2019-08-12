@@ -25,4 +25,23 @@ public class AggregatedChampionDto {
   private double averageCs;
   private double averageGold;
   private double averageCsPerMin;
+
+
+  // TODO refactor. no logic in models
+  public static AggregatedChampionDao from(AggregatedChampionDto aggregatedChampionDto) {
+    return AggregatedChampionDao.builder()
+        .accountId(aggregatedChampionDto.getAccountId())
+        .name(aggregatedChampionDto.getName())
+        .played(aggregatedChampionDto.getPlayed())
+        .wins(aggregatedChampionDto.getWins())
+        .losses(aggregatedChampionDto.getLosses())
+        .winrate(aggregatedChampionDto.getWinrate())
+        .averageKills(aggregatedChampionDto.getAverageKills())
+        .averageDeaths(aggregatedChampionDto.getAverageDeaths())
+        .averageAssists(aggregatedChampionDto.getAverageAssists())
+        .averageCs(aggregatedChampionDto.getAverageCs())
+        .averageGold(aggregatedChampionDto.getAverageGold())
+        .averageCsPerMin(aggregatedChampionDto.getAverageCsPerMin())
+        .build();
+  }
 }

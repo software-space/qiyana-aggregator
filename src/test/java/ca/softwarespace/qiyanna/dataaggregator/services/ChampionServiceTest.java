@@ -1,5 +1,7 @@
 package ca.softwarespace.qiyanna.dataaggregator.services;
 
+import static org.junit.Assert.assertEquals;
+
 import ca.softwarespace.qiyanna.dataaggregator.models.AggregatedChampionDto;
 import ca.softwarespace.qiyanna.dataaggregator.models.ChampionDto;
 import java.util.ArrayList;
@@ -7,27 +9,24 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ChampionService.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ChampionServiceTest {
 
-  @Autowired
+  @InjectMocks
   private ChampionService championService;
 
   private static List<ChampionDto> viChampions = new ArrayList<>();
   private static final String VI_NAME = "Vi";
+  private static final String ACCOUNT_ID = "better_jg_wins";
 
   @BeforeClass
   public static void setup() {
-
     viChampions.add(ChampionDto.builder()
         .name(VI_NAME)
+        .accountId(ACCOUNT_ID)
         .kills(7)
         .deaths(3)
         .assists(8)
@@ -39,6 +38,7 @@ public class ChampionServiceTest {
 
     viChampions.add(ChampionDto.builder()
         .name(VI_NAME)
+        .accountId(ACCOUNT_ID)
         .kills(3)
         .deaths(2)
         .assists(12)
@@ -50,6 +50,7 @@ public class ChampionServiceTest {
 
     viChampions.add(ChampionDto.builder()
         .name(VI_NAME)
+        .accountId(ACCOUNT_ID)
         .kills(12)
         .deaths(4)
         .assists(3)
@@ -62,7 +63,7 @@ public class ChampionServiceTest {
 
   @Test
   public void aggregateChampion_shouldAggregateStatsCorrectly() {
-    AggregatedChampionDto aggregatedChampionDto = championService.aggregateChampion(viChampions, VI_NAME);
+    AggregatedChampionDto aggregatedChampionDto = championService.aggregateChampion(viChampions);
     double averageViKills = ((7 + 3 + 12) / (double) 3);
     double averageViDeaths = ((3 + 2 + 4) / (double) 3);
     double averageViAssists = ((8 + 12 + 3) / (double) 3);
@@ -75,6 +76,7 @@ public class ChampionServiceTest {
     double winrate = (double) wins / ((double) wins + (double) losses);
 
     assertEquals(VI_NAME, aggregatedChampionDto.getName());
+    assertEquals(ACCOUNT_ID, aggregatedChampionDto.getAccountId());
     assertEquals(averageViKills, aggregatedChampionDto.getAverageKills(), 0.0f);
     assertEquals(averageViDeaths, aggregatedChampionDto.getAverageDeaths(), 0.0f);
     assertEquals(averageViAssists, aggregatedChampionDto.getAverageAssists(), 0.0f);

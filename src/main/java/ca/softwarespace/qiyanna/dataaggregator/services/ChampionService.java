@@ -1,7 +1,9 @@
 package ca.softwarespace.qiyanna.dataaggregator.services;
 
+import ca.softwarespace.qiyanna.dataaggregator.models.AggregatedChampionDao;
 import ca.softwarespace.qiyanna.dataaggregator.models.AggregatedChampionDto;
 import ca.softwarespace.qiyanna.dataaggregator.models.ChampionDto;
+import ca.softwarespace.qiyanna.dataaggregator.repositories.AggregatedChampionRepository;
 import ca.softwarespace.qiyanna.dataaggregator.util.AggregatedChampionConsumer;
 import ca.softwarespace.qiyanna.dataaggregator.util.RegionUtil;
 import com.merakianalytics.orianna.Orianna;
@@ -19,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,7 +32,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChampionService {
 
-  public CompletableFuture<List<AggregatedChampionDto>> aggregateChampionStatsBySummoner(String summonerName, String championName, String regionName) {
+  private final AggregatedChampionRepository aggregatedChampionRepository;
+
+  public List<AggregatedChampionDto> aggregateChampionStatsBySummoner(String summonerName, String championName, String regionName) {
     Region region = RegionUtil.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(summonerName)
         .withRegion(region)
@@ -46,7 +49,13 @@ public class ChampionService {
         .get();
     List<ChampionDto> championsFromMatchHistory = getChampionsFromMatchHistory(summoner, matches);
     List<AggregatedChampionDto> aggregatedChampions = aggregateAllChampions(championsFromMatchHistory);
-    return CompletableFuture.completedFuture(aggregatedChampions);
+
+    List<AggregatedChampionDao> aggregatedChampionDaos = aggregatedChampions.stream()
+        .map(AggregatedChampionDto::from)
+        .collect(Collectors.toList());
+
+    aggregatedChampionRepository.saveOrUpdate(aggregatedChampionDaos);
+    return aggregatedChampions;
   }
 
   private List<ChampionDto> getChampionsFromMatchHistory(Summoner summoner, MatchHistory matches) {
@@ -69,7 +78,7 @@ public class ChampionService {
         .collect(Collectors.groupingBy(ChampionDto::getName));
     List<AggregatedChampionDto> aggregatedChampions = new ArrayList<>();
     for (Map.Entry<String, List<ChampionDto>> entry : championsGroupedByName.entrySet()) {
-      AggregatedChampionDto aggregatedChampion = aggregateChampion(entry.getValue(), entry.getKey());
+      AggregatedChampionDto aggregatedChampion = aggregateChampion(entry.getValue());
       aggregatedChampions.add(aggregatedChampion);
     }
     return aggregatedChampions.stream()
@@ -89,6 +98,7 @@ public class ChampionService {
 
     return ChampionDto.builder()
         .name(participant.getChampion().getName())
+        .accountId(participant.getSummoner().getAccountId())
         .kills(stats.getKills())
         .deaths(stats.getDeaths())
         .assists(stats.getAssists())
@@ -99,9 +109,9 @@ public class ChampionService {
         .build();
   }
 
-  public AggregatedChampionDto aggregateChampion(List<ChampionDto> champions, String name) {
+  public AggregatedChampionDto aggregateChampion(List<ChampionDto> champions) {
     return champions.stream()
         .collect(AggregatedChampionConsumer::new, AggregatedChampionConsumer::accept, AggregatedChampionConsumer::combine)
-        .getAggregatedChampionDto(name);
+        .getAggregatedChampionDto();
   }
 }

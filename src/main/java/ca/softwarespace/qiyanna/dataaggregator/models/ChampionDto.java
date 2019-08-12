@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ChampionDto {
 
   private String name;
+  private String accountId;
   private int cs;
   private int kills;
   private int deaths;

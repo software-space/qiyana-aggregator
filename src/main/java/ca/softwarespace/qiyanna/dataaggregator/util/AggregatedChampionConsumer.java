@@ -11,6 +11,8 @@ public class AggregatedChampionConsumer implements Consumer<ChampionDto> {
 
   @Override
   public void accept(ChampionDto championDto) {
+    aggregatedChampionDto.setName(championDto.getName());
+    aggregatedChampionDto.setAccountId(championDto.getAccountId());
     aggregatedChampionDto.setAverageKills(aggregatedChampionDto.getAverageKills() + championDto.getKills());
     aggregatedChampionDto.setAverageDeaths(aggregatedChampionDto.getAverageDeaths() + championDto.getDeaths());
     aggregatedChampionDto.setAverageAssists(aggregatedChampionDto.getAverageAssists() + championDto.getAssists());
@@ -34,8 +36,7 @@ public class AggregatedChampionConsumer implements Consumer<ChampionDto> {
     count += other.count;
   }
 
-  public AggregatedChampionDto getAggregatedChampionDto(String name) {
-    aggregatedChampionDto.setName(name);
+  public AggregatedChampionDto getAggregatedChampionDto() {
     aggregatedChampionDto.setAverageKills(aggregatedChampionDto.getAverageKills() / count);
     aggregatedChampionDto.setAverageDeaths(aggregatedChampionDto.getAverageDeaths() / count);
     aggregatedChampionDto.setAverageAssists(aggregatedChampionDto.getAverageAssists() / count);

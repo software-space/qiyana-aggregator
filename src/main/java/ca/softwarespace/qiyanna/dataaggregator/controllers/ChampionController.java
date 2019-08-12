@@ -25,8 +25,8 @@ public class ChampionController {
       @ApiParam(example = "EUW", required = true)
       @RequestParam String regionName,
       @ApiParam(example = "Olaf")
-      @RequestParam(required = false) String championName) throws Exception {
-    return championService.aggregateChampionStatsBySummoner(summonerName, championName, regionName).get();
+      @RequestParam(required = false) String championName) {
+    return championService.aggregateChampionStatsBySummoner(summonerName, championName, regionName);
   }
 
 

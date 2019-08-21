@@ -1,5 +1,6 @@
 package ca.softwarespace.qiyanna.dataaggregator.services;
 
+import ca.softwarespace.qiyanna.dataaggregator.models.MatchDto;
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.Queue;
 import com.merakianalytics.orianna.types.common.Region;
@@ -8,25 +9,26 @@ import com.merakianalytics.orianna.types.core.match.Match;
 import com.merakianalytics.orianna.types.core.match.MatchHistory;
 import com.merakianalytics.orianna.types.core.match.Participant;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
 
 
 /**
  * Author: Steve Mbiele Date: 5/15/2019
  */
 @Service
+@Log4j2
+@RequiredArgsConstructor
 public class MatchesCollectionService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MatchesCollectionService.class);
-
-
-  private MatchHistory filterMatchHistory(Summoner summoner) {
+  public MatchHistory filterMatchHistory(Summoner summoner) {
     ArrayList<Queue> queues = new ArrayList<>();
     queues.add(Queue.OVERCHARGE);
     queues.add(Queue.SIEGE);
@@ -84,6 +86,22 @@ public class MatchesCollectionService {
         .get();
     Region region = summoner.getRegion();
     aggregate(summoner, region);
+  }
+
+  @Async
+  public CompletableFuture<Set<MatchDto>> getMatchHistoryBySummoner(Summoner summoner) {
+    MatchHistory matches = filterMatchHistory(summoner);
+    Set<MatchDto> matchDtos = new HashSet<>();
+
+    for (Match match : matches) {
+      Match pulledMatch = Match.withId(match.getId()).get();
+      MatchDto matchDto = MatchDto.builder()
+          .id(pulledMatch.getId())
+          .build();
+      matchDtos.add(matchDto);
+    }
+
+    return CompletableFuture.completedFuture(matchDtos);
   }
 
   private void aggregate(Summoner summoner, Region region) {

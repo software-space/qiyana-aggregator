@@ -1,7 +1,12 @@
-version: '3.7'
+version: '3'
 services:
   mongo:
     image: mongo
     restart: unless-stopped
     ports:
       - "27017:27017"
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - "54320:5432"

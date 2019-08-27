@@ -6,7 +6,13 @@ services:
     ports:
       - "27017:27017"
   postgres:
-    image: postgres
+    image: postgres:11.5-alpine
     restart: unless-stopped
+    environment:
+      POSTGRES_DB: qiyanna
+      POSTGRES_USER: qiyanna
+      POSTGRES_PASSWORD: qiyanna123
     ports:
       - "54320:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

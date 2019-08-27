@@ -95,7 +95,6 @@ CREATE TABLE Champion_Stats
   pickRate        float
 );
 
-
 -- this is a test table.
 -- CREATE TABLE Map
 -- (

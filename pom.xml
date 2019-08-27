@@ -24,6 +24,11 @@
     <java.version>1.8</java.version>
     <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     <io.springfox.version>2.9.2</io.springfox.version>
+    <db.url>jdbc:postgresql://localhost:54320/qiyanna</db.url>
+    <db.username>qiyanna</db.username>
+    <db.name>qiyanna</db.name>
+    <db.pass>qiyanna123</db.pass>
+    <org.jooq.version>3.11.12</org.jooq.version>
   </properties>
 
   <repositories>
@@ -89,10 +94,16 @@
       <optional>true</optional>
     </dependency>
 
+    <!--Logging-->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.16</version>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
+      <version>1.7.5</version>
     </dependency>
 
     <dependency>
@@ -141,17 +152,18 @@
     <dependency>
       <groupId>org.jooq</groupId>
       <artifactId>jooq</artifactId>
-      <version>3.11.12</version>
+      <version>${org.jooq.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jooq</groupId>
       <artifactId>jooq-meta</artifactId>
-      <version>3.11.12</version>
+      <version>${org.jooq.version}</version>
     </dependency>
+
     <dependency>
-      <groupId>org.jooq</groupId>
-      <artifactId>jooq-codegen</artifactId>
-      <version>3.11.12</version>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.5</version>
     </dependency>
 
   </dependencies>
@@ -170,11 +182,78 @@
 
   <build>
     <plugins>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>3.0</version>
+
+        <!-- Note that we're executing the Flyway plugin in the "generate-sources" phase -->
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>migrate</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <!-- Note that we need to prefix the db/migration path with filesystem: to prevent Flyway
+             from looking for our migration scripts only on the classpath -->
+        <configuration>
+          <url>${db.url}</url>
+          <user>${db.username}</user>
+          <schemas>${db.name}</schemas>
+          <password>${db.pass}</password>
+          <locations>
+            <location>filesystem:src/main/resources/db/migration</location>
+          </locations>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jooq</groupId>
+        <artifactId>jooq-codegen-maven</artifactId>
+        <version>${org.jooq.version}</version>
+
+        <!-- The jOOQ code generation plugin is also executed in the generate-sources phase, prior to compilation -->
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <!-- This is a minimal working configuration. See the manual's section about the code generator for more details -->
+        <configuration>
+          <jdbc>
+            <url>${db.url}</url>
+            <user>${db.username}</user>
+            <password>${db.pass}</password>
+          </jdbc>
+          <generator>
+            <database>
+              <includes>.*</includes>
+              <inputSchema>${db.name}</inputSchema>
+            </database>
+            <target>
+              <packageName>ca.softwarespace.qiyanna.dataaggregator.models.generated</packageName>
+              <directory>target/generated-sources/qiyanna
+              </directory>
+            </target>
+          </generator>
+        </configuration>
+      </plugin>
+
     </plugins>
+
     <finalName>data-aggregator</finalName>
   </build>
 

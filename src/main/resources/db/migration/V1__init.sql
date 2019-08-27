@@ -94,12 +94,3 @@ CREATE TABLE Champion_Stats
   banRate         float,
   pickRate        float
 );
-
--- this is a test table.
--- CREATE TABLE Map
--- (
---   mapId integer,
---   name varchar(100),
---   notes varchar(1024),
---   primary key (mapId)
--- );

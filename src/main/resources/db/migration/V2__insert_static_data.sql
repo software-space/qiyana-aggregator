@@ -44,5 +44,5 @@ INSERT INTO qiyanna.queue (queueId, name, mapId)
   VALUES (100, '5v5 ARAM games', 14),
   VALUES (310, 'Nemesis games', 11),
   VALUES (313, 'Black Market Brawlers games', 11),
-  VALUES (313, 'Definitely Not Dominion games', 8),
+  VALUES (317, 'Definitely Not Dominion games', 8),
 

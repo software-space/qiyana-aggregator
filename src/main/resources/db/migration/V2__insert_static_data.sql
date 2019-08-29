@@ -6,12 +6,20 @@ CREATE TABLE Game_Mode
   primary key (gameModeId)
 );
 
-ALTER TABLE queue
-  ALTER COLUMN name TYPE varchar(1024);
-ALTER TABLE qiyanna.queue
-  ADD column gameModeId integer;
-ALTER TABLE qiyanna.queue
-  ADD CONSTRAINT fk_game_mode FOREIGN KEY (gameModeId) REFERENCES Game_Mode (gameModeId);
+CREATE TABLE Role
+(
+  roleId serial,
+  name   varchar(50),
+  primary key (roleId)
+);
+
+CREATE TABLE Map
+(
+  mapId serial,
+  name  varchar(255),
+  notes varchar(2048),
+  primary key (mapId)
+);
 
 INSERT INTO Game_Mode (gameModeId, name, description)
 VALUES (1, 'CLASSIC', 'Classic Summoner''s Rift and Twisted Treeline games'),
@@ -35,53 +43,53 @@ VALUES (1, 'CLASSIC', 'Classic Summoner''s Rift and Twisted Treeline games'),
 
 
 
-INSERT INTO qiyanna.queue (queueId, name, gameModeId)
-VALUES (72, '1v1 Snowdown Showdown games', 12),
-       (73, '2v2 Snowdown Showdown games', 12),
-       (75, '6v6 Hexakill games', 11),
-       (76, 'Ultra Rapid Fire games', 11),
-       (78, 'One For All: Mirror Mode games', 12),
-       (83, 'Co-op vs AI Ultra Rapid Fire games', 11),
-       (98, '6v6 Hexakill games', 10),
-       (100, '5v5 ARAM games', 14),
-       (310, 'Nemesis games', 11),
-       (313, 'Black Market Brawlers games', 11),
-       (317, 'Definitely Not Dominion games', 8),
-       (325, 'All Random games', 13),
-       (400, '5v5 Draft Pick games', 1),
-       (420, '5v5 Ranked Solo games', 1),
-       (430, '5v5 Blind Pick games', 1),
-       (440, '5v5 Ranked Flex games', 1),
-       (450, 'Howling Abyss', 3),
-       (460, 'Twisted Treeline', 1),
-       (470, 'Twisted Treeline', 1),
-       (600, '3v3 Blind Pick games', 1),
-       (610, '3v3 Ranked Flex games', 1),
-       (700, 'Clash games', 1),
-       (800, 'Co-op vs. AI Intermediate Bot games', 1),
-       (810, 'Co-op vs. AI Intro Bot games', 1),
-       (820, 'Co-op vs. AI Beginner Bot games', 1),
-       (830, 'Co-op vs. AI Intro Bot games', 1),
-       (840, 'Co-op vs. AI Beginner Bot games', 1),
-       (850, 'Co-op vs. AI Intermediate Bot games', 1),
-       (900, 'ARURF games', 5),
-       (910, 'Ascension games', 8),
-       (920, 'Legend of the Poro King games', 10),
-       (940, 'Nexus Siege games', 11),
-       (950, 'Doom Bots Voting games', 6),
-       (960, 'Doom Bots Standard games', 6),
-       (980, 'Star Guardian Invasion: Normal games', 15),
-       (990, 'Star Guardian Invasion: Onslaught games', 15),
-       (1000, 'PROJECT: Hunters games', 16),
-       (1010, 'Snow ARURF games', 5),
-       (1020, 'One for All games', 7),
-       (1030, 'Odyssey Extraction: Intro games', 18),
-       (1040, 'Odyssey Extraction: Cadet games', 18),
-       (1050, 'Odyssey Extraction: Crewmember games', 18),
-       (1060, 'Odyssey Extraction: Captain games', 18),
-       (1070, 'Odyssey Extraction: Onslaught games', 18),
-       (1090, 'Teamfight Tactics games', null),
-       (1100, 'Ranked Teamfight Tactics games', null);
+INSERT INTO queue (queueId, name)
+VALUES (72, '1v1 Snowdown Showdown games'),
+       (73, '2v2 Snowdown Showdown games'),
+       (75, '6v6 Hexakill games'),
+       (76, 'Ultra Rapid Fire games'),
+       (78, 'One For All: Mirror Mode games'),
+       (83, 'Co-op vs AI Ultra Rapid Fire games'),
+       (98, '6v6 Hexakill games'),
+       (100, '5v5 ARAM games'),
+       (310, 'Nemesis games'),
+       (313, 'Black Market Brawlers games'),
+       (317, 'Definitely Not Dominion games'),
+       (325, 'All Random games'),
+       (400, '5v5 Draft Pick games'),
+       (420, '5v5 Ranked Solo games'),
+       (430, '5v5 Blind Pick games'),
+       (440, '5v5 Ranked Flex games'),
+       (450, 'Howling Abyss'),
+       (460, 'Twisted Treeline'),
+       (470, 'Twisted Treeline'),
+       (600, '3v3 Blind Pick games'),
+       (610, '3v3 Ranked Flex games'),
+       (700, 'Clash games'),
+       (800, 'Co-op vs. AI Intermediate Bot games'),
+       (810, 'Co-op vs. AI Intro Bot games'),
+       (820, 'Co-op vs. AI Beginner Bot games'),
+       (830, 'Co-op vs. AI Intro Bot games'),
+       (840, 'Co-op vs. AI Beginner Bot games'),
+       (850, 'Co-op vs. AI Intermediate Bot games'),
+       (900, 'ARURF games'),
+       (910, 'Ascension games'),
+       (920, 'Legend of the Poro King games'),
+       (940, 'Nexus Siege games'),
+       (950, 'Doom Bots Voting games'),
+       (960, 'Doom Bots Standard games'),
+       (980, 'Star Guardian Invasion: Normal games'),
+       (990, 'Star Guardian Invasion: Onslaught games'),
+       (1000, 'PROJECT: Hunters games'),
+       (1010, 'Snow ARURF games'),
+       (1020, 'One for All games'),
+       (1030, 'Odyssey Extraction: Intro games'),
+       (1040, 'Odyssey Extraction: Cadet games'),
+       (1050, 'Odyssey Extraction: Crewmember games'),
+       (1060, 'Odyssey Extraction: Captain games'),
+       (1070, 'Odyssey Extraction: Onslaught games'),
+       (1090, 'Teamfight Tactics games'),
+       (1100, 'Ranked Teamfight Tactics games');
 
 INSERT INTO season (seasonId, name)
 VALUES (0, 'PRESEASON 3'),
@@ -100,11 +108,56 @@ VALUES (0, 'PRESEASON 3'),
        (13, 'SEASON 2019');
 
 INSERT INTO lane (name)
-  VALUES
-    ('TOP'),
-    ('JUNGLE'),
-    ('MID'),
-    ('MIDDLE'),
-    ('BOT'),
-    ('BOTTOM');
+VALUES ('TOP'),
+       ('JUNGLE'),
+       ('MID'),
+       ('MIDDLE'),
+       ('BOT'),
+       ('BOTTOM');
 
+INSERT INTO Role(name)
+VALUES ('DUO'),
+       ('NONE'),
+       ('SOLO'),
+       ('DUO_CARRY'),
+       ('DUO_SUPPORT');
+
+INSERT INTO region(shortName)
+VALUES ('NA'),
+       ('EUW'),
+       ('KR'),
+       ('EUN'),
+       ('JP'),
+       ('LAN'),
+       ('LAS'),
+       ('OCE'),
+       ('RU'),
+       ('TR'),
+       ('BR');
+
+INSERT INTO Map(name, notes)
+VALUES ('Summoner''s Rift', 'Original Summer variant'),
+       ('Summoner''s Rift', 'Original Autumn variant'),
+       ('The Proving Grounds', 'Tutorial map'),
+       ('Twisted Treeline', 'Original version'),
+       ('The Crystal Scar', 'Dominion map'),
+       ('Twisted Treeline', 'Current version'),
+       ('Summoner''s Rift', 'Current version'),
+       ('Howling Abyss', 'ARAM map'),
+       ('Butcher''s Bridge', 'ARAM map'),
+       ('Cosmic Ruins', 'Dark Star: Singularity map'),
+       ('Valoran City Park', 'Star Guardian Invasion map'),
+       ('Substructure 43', 'PROJECT: Hunters map'),
+       ('Crash Site', 'Odyssey: Extraction map'),
+       ('Nexus Blitz', 'Nexus Blitz map');
+
+INSERT INTO rank(shortName)
+VALUES ('IRON'),
+       ('BRONZE'),
+       ('SILVER'),
+       ('GOLD'),
+       ('PLAT'),
+       ('DIAMOND'),
+       ('MASTER'),
+       ('GRANDMASTER'),
+       ('CHALLENGER');

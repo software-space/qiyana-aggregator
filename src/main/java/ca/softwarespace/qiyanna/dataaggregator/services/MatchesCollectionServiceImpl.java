@@ -88,7 +88,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     if (startSeasonId == null) {
       startSeasonId = Season.getLatest().getId();
     }
-    Long seasonStartTime = getPatchStartTime(regionName, startSeasonId);
+    Long seasonStartTime = getPatchStartTime(regionName, startSeasonId) * Constants.SECOND_TO_MILLI;
     Region region = RegionUtil.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(summonerName).withRegion(region).get();
     collectMatches(summoner, region, seasonStartTime);
@@ -99,7 +99,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
   @Async
   public void prepareDataCollection(String accountId, String regionName) {
     Region region = RegionUtil.getRegionByTag(regionName);
-    long seasonStartTime = getPatchStartTime(region.getTag(), Season.getLatest().getId());
+    long seasonStartTime = getPatchStartTime(region.getTag(), Season.getLatest().getId()) * Constants.SECOND_TO_MILLI;
     Summoner summoner = Orianna.summonerWithAccountId(accountId).withRegion(region).get();
     collectMatches(summoner, region, seasonStartTime);
     DataCollectionEvent collectionEvent = new DataCollectionEvent(this, "this is a test");
@@ -146,7 +146,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     HashSet<Long> unPulledMatchIds = new HashSet<>();
 
     DateTime startUpdateTime = createOrUpdateSummonerRecord(summoner);
-    long seasonStartTime = getPatchStartTime(region.getTag(), Season.getLatest().getId());
+    long seasonStartTime = getPatchStartTime(region.getTag(), Season.getLatest().getId()) * Constants.SECOND_TO_MILLI;
     MatchHistory matches = filterMatchHistory(summoner, millsToDateTime(seasonStartTime),
         startUpdateTime);
     for (Match match : matches) {
@@ -298,17 +298,14 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     return record;
   }
 
-  // TODO-Urgent: there is a bug in orianna, with getting by withStartTime.
   private MatchHistory filterMatchHistory(Summoner summoner, DateTime seasonStartTime,
       DateTime startTime) {
     if (startTime != null) {
       return Orianna.matchHistoryForSummoner(summoner)
-//          .withQueues(Constants.getQueuesList()).withStartTime(startTime).get();
-          .withQueues(Constants.getQueuesList()).onPatch(Patch.named("9.17").get()).get();
+          .withQueues(Constants.getQueuesList()).withStartTime(startTime).get();
     } else {
-//      return Orianna.matchHistoryForSummoner(summoner).withStartTime(seasonStartTime)
-      return Orianna.matchHistoryForSummoner(summoner)
-          .withQueues(Constants.getQueuesList()).onPatch(Patch.named("9.17").get()).get();
+      return Orianna.matchHistoryForSummoner(summoner).withStartTime(seasonStartTime)
+          .withQueues(Constants.getQueuesList()).get();
     }
   }
 

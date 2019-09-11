@@ -72,7 +72,7 @@ public class ChampionServiceTest {
     int played = 3;
     int wins = 2;
     int losses = 1;
-    double winrate = (double) wins / ((double) wins + (double) losses);
+    double winRate = (double) wins / ((double) wins + (double) losses);
 
     assertEquals(VI_NAME, aggregatedChampionDto.getName());
     assertEquals(ACCOUNT_ID, aggregatedChampionDto.getAccountId());
@@ -85,7 +85,7 @@ public class ChampionServiceTest {
     assertEquals(played, aggregatedChampionDto.getPlayed());
     assertEquals(wins, aggregatedChampionDto.getWins());
     assertEquals(losses, aggregatedChampionDto.getLosses());
-    assertEquals(winrate, aggregatedChampionDto.getWinRate(), 0.0f);
+    assertEquals(winRate, aggregatedChampionDto.getWinRate(), 0.0f);
   }
 
 }

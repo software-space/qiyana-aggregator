@@ -21,7 +21,7 @@ public class SummonerService {
 
     int wins = summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getWins();
     int losses = summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getLosses();
-    double winrate = (double) wins / ((double) wins + (double) losses);
+    double winRate = (double) wins / ((double) wins + (double) losses);
 
     return SummonerDto.builder()
         .accountId(summoner.getAccountId())
@@ -32,7 +32,7 @@ public class SummonerService {
         .leaguePoints(summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getLeaguePoints())
         .wins(wins)
         .losses(losses)
-        .winrate(winrate)
+        .winRate(winRate)
         .build();
   }
 }

@@ -20,7 +20,7 @@ public class AggregatedChampionDao {
   private int played;
   private int wins;
   private int losses;
-  private double winrate;
+  private double winRate;
 
   private double averageKills;
   private double averageDeaths;

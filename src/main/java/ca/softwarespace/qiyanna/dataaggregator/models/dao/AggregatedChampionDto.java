@@ -34,7 +34,7 @@ public class AggregatedChampionDto {
         .played(aggregatedChampionDto.getPlayed())
         .wins(aggregatedChampionDto.getWins())
         .losses(aggregatedChampionDto.getLosses())
-        .winrate(aggregatedChampionDto.getWinRate())
+        .winRate(aggregatedChampionDto.getWinRate())
         .averageKills(aggregatedChampionDto.getAverageKills())
         .averageDeaths(aggregatedChampionDto.getAverageDeaths())
         .averageAssists(aggregatedChampionDto.getAverageAssists())

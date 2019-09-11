@@ -9,9 +9,8 @@ import java.util.List;
  */
 public class Constants {
 
-  public static final String MATCH_LIST_BEGIN_INDEX_PARAMETER = "beginIndex";
-  public static final String MATCHES_NODE_IN_MATCH_LIST = "matches";
   public static final int SOLO_QUEUE_RANKED_ID = 420;
+  public static final long SECOND_TO_MILLI= 1000;
   private Constants() {
   }
 

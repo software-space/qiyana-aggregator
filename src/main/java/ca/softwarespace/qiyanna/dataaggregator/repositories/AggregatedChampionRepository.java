@@ -31,7 +31,7 @@ public class AggregatedChampionRepository {
         aggregatedChampionDaoFromDb.setPlayed(aggregatedChampionDao.getPlayed());
         aggregatedChampionDaoFromDb.setWins(aggregatedChampionDao.getWins());
         aggregatedChampionDaoFromDb.setLosses(aggregatedChampionDao.getLosses());
-        aggregatedChampionDaoFromDb.setWinrate(aggregatedChampionDao.getWinrate());
+        aggregatedChampionDaoFromDb.setWinRate(aggregatedChampionDao.getWinRate());
         aggregatedChampionDaoFromDb.setAverageKills(aggregatedChampionDao.getAverageKills());
         aggregatedChampionDaoFromDb.setAverageDeaths(aggregatedChampionDao.getAverageDeaths());
         aggregatedChampionDaoFromDb.setAverageAssists(aggregatedChampionDao.getAverageAssists());

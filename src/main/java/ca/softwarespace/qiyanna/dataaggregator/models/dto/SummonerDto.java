@@ -21,6 +21,6 @@ public class SummonerDto {
   private int leaguePoints;
   private int wins;
   private int losses;
-  private double winrate;
+  private double winRate;
 
 }

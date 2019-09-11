@@ -1,6 +1,6 @@
 package ca.softwarespace.qiyanna.dataaggregator.repositories;
 
-import ca.softwarespace.qiyanna.dataaggregator.models.AggregatedChampionDao;
+import ca.softwarespace.qiyanna.dataaggregator.models.dao.AggregatedChampionDao;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;

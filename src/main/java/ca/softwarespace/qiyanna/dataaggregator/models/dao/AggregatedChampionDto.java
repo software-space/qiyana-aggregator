@@ -1,4 +1,4 @@
-package ca.softwarespace.qiyanna.dataaggregator.models;
+package ca.softwarespace.qiyanna.dataaggregator.models.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ public class AggregatedChampionDto {
   private int played;
   private int wins;
   private int losses;
-  private double winrate;
+  private double winRate;
 
   private double averageKills;
   private double averageDeaths;
@@ -27,7 +27,6 @@ public class AggregatedChampionDto {
   private double averageCsPerMin;
 
 
-  // TODO refactor. no logic in models
   public static AggregatedChampionDao from(AggregatedChampionDto aggregatedChampionDto) {
     return AggregatedChampionDao.builder()
         .accountId(aggregatedChampionDto.getAccountId())
@@ -35,7 +34,7 @@ public class AggregatedChampionDto {
         .played(aggregatedChampionDto.getPlayed())
         .wins(aggregatedChampionDto.getWins())
         .losses(aggregatedChampionDto.getLosses())
-        .winrate(aggregatedChampionDto.getWinrate())
+        .winrate(aggregatedChampionDto.getWinRate())
         .averageKills(aggregatedChampionDto.getAverageKills())
         .averageDeaths(aggregatedChampionDto.getAverageDeaths())
         .averageAssists(aggregatedChampionDto.getAverageAssists())

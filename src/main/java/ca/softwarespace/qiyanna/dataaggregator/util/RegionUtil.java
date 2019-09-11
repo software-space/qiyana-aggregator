@@ -4,6 +4,10 @@ import com.merakianalytics.orianna.types.common.Region;
 
 public class RegionUtil {
 
+  private RegionUtil() {
+
+  }
+
   public static Region getRegionByTag(String tag) {
     switch (tag.toUpperCase()) {
       case "NA":

@@ -1,6 +1,10 @@
 package ca.softwarespace.qiyanna.dataaggregator.util;
 
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -39,7 +43,7 @@ public class RestClient {
   }
 
   public void put(String uri, String json) {
-    HttpEntity<String> requestEntity = new HttpEntity<String>(json, httpHeaders);
+    HttpEntity<String> requestEntity = new HttpEntity<>(json, httpHeaders);
     ResponseEntity<String> responseEntity = restTemplate
         .exchange(uri, HttpMethod.PUT, requestEntity, (Class<String>) null);
     this.setHttpStatus(responseEntity.getStatusCode());

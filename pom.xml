@@ -24,10 +24,6 @@
     <java.version>1.8</java.version>
     <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     <io.springfox.version>2.9.2</io.springfox.version>
-    <db.url>jdbc:postgresql://localhost:54320/qiyanna</db.url>
-    <db.username>qiyanna</db.username>
-    <db.name>qiyanna</db.name>
-    <db.pass>qiyanna123</db.pass>
     <org.jooq.version>3.11.12</org.jooq.version>
   </properties>
 
@@ -109,7 +105,7 @@
     <dependency>
       <groupId>com.merakianalytics.orianna</groupId>
       <artifactId>orianna</artifactId>
-      <version>4.0.0-rc4</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -166,6 +162,19 @@
       <version>42.2.5</version>
     </dependency>
 
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>5.1.9.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>16.0.2</version>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
 
   <dependencyManagement>
@@ -181,6 +190,17 @@
   </dependencyManagement>
 
   <build>
+    
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.4.0.905</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
 
       <plugin>
@@ -206,10 +226,10 @@
         <!-- Note that we need to prefix the db/migration path with filesystem: to prevent Flyway
              from looking for our migration scripts only on the classpath -->
         <configuration>
-          <url>${db.url}</url>
-          <user>${db.username}</user>
-          <schemas>${db.name}</schemas>
-          <password>${db.pass}</password>
+          <url>${env.QIYANNA_CONFIG_DATABASE_URL}</url>
+          <user>${env.QIYANNA_CONFIG_DATABASE_USERNAME}</user>
+          <schemas>${env.QIYANNA_CONFIG_DATABASE_USERNAME}</schemas>
+          <password>${env.QIYANNA_CONFIG_DATABASE_PASSWORD}</password>
           <locations>
             <location>filesystem:src/main/resources/db/migration</location>
           </locations>
@@ -234,19 +254,18 @@
         <!-- This is a minimal working configuration. See the manual's section about the code generator for more details -->
         <configuration>
           <jdbc>
-            <url>${db.url}</url>
-            <user>${db.username}</user>
-            <password>${db.pass}</password>
+            <url>${env.QIYANNA_CONFIG_DATABASE_URL}</url>
+            <user>${env.QIYANNA_CONFIG_DATABASE_USERNAME}</user>
+            <password>${env.QIYANNA_CONFIG_DATABASE_PASSWORD}</password>
           </jdbc>
           <generator>
             <database>
               <includes>.*</includes>
-              <inputSchema>${db.name}</inputSchema>
+              <inputSchema>${env.QIYANNA_CONFIG_DATABASE_USERNAME}</inputSchema>
             </database>
             <target>
               <packageName>ca.softwarespace.qiyanna.dataaggregator.models.generated</packageName>
-              <directory>target/generated-sources/qiyanna
-              </directory>
+              <directory>src/main/java</directory>
             </target>
           </generator>
         </configuration>

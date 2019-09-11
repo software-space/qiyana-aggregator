@@ -1,6 +1,6 @@
 package ca.softwarespace.qiyanna.dataaggregator.controllers;
 
-import ca.softwarespace.qiyanna.dataaggregator.models.AggregatedChampionDto;
+import ca.softwarespace.qiyanna.dataaggregator.models.dao.AggregatedChampionDto;
 import ca.softwarespace.qiyanna.dataaggregator.services.ChampionService;
 import io.swagger.annotations.ApiParam;
 import java.util.List;

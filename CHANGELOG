@@ -19,3 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the Orianna as an api wrapper
 - Removed all the previous models as they are not needed anymore
 - Changed the README to add new instruction for dev.
+
+##[0.1.0] - 2019-08-03
+- Re-added the dependency on PostgreSQL,
+- Added the JOOQ and flyway for querying and database versioning respectively,
+- Change the data collection, to make use of both SQL and mongoDB,
+- Create the new database schema

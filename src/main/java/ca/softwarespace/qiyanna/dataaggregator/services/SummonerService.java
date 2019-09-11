@@ -1,7 +1,7 @@
 package ca.softwarespace.qiyanna.dataaggregator.services;
 
 import ca.softwarespace.qiyanna.dataaggregator.models.dto.SummonerDto;
-import ca.softwarespace.qiyanna.dataaggregator.util.RegionUtil;
+import ca.softwarespace.qiyanna.dataaggregator.util.RegionEnum;
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.Queue;
 import com.merakianalytics.orianna.types.common.Region;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class SummonerService {
 
   public SummonerDto getSummonerByName(String name, String regionName) {
-    Region region = RegionUtil.getRegionByTag(regionName);
+    Region region = RegionEnum.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(name).withRegion(region).get();
 
     int wins = summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getWins();

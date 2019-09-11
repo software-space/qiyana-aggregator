@@ -16,7 +16,7 @@ import ca.softwarespace.qiyanna.dataaggregator.models.generated.tables.records.S
 import ca.softwarespace.qiyanna.dataaggregator.models.generated.tables.records.TierRecord;
 import ca.softwarespace.qiyanna.dataaggregator.services.interfaces.MatchesCollectionService;
 import ca.softwarespace.qiyanna.dataaggregator.util.Constants;
-import ca.softwarespace.qiyanna.dataaggregator.util.RegionUtil;
+import ca.softwarespace.qiyanna.dataaggregator.util.RegionEnum;
 import ca.softwarespace.qiyanna.dataaggregator.util.RestClient;
 import ca.softwarespace.qiyanna.dataaggregator.util.SeasonsEnum;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,7 +30,6 @@ import com.merakianalytics.orianna.types.common.Season;
 import com.merakianalytics.orianna.types.core.match.Match;
 import com.merakianalytics.orianna.types.core.match.MatchHistory;
 import com.merakianalytics.orianna.types.core.match.Participant;
-import com.merakianalytics.orianna.types.core.staticdata.Patch;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -88,8 +87,8 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     if (startSeasonId == null) {
       startSeasonId = Season.getLatest().getId();
     }
-    Long seasonStartTime = getPatchStartTime(regionName, startSeasonId) * Constants.SECOND_TO_MILLI;
-    Region region = RegionUtil.getRegionByTag(regionName);
+    long seasonStartTime = getPatchStartTime(regionName, startSeasonId) * Constants.SECOND_TO_MILLI;
+    Region region = RegionEnum.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(summonerName).withRegion(region).get();
     collectMatches(summoner, region, seasonStartTime);
     DataCollectionEvent collectionEvent = new DataCollectionEvent(this, "this is a test");
@@ -98,8 +97,9 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
 
   @Async
   public void prepareDataCollection(String accountId, String regionName) {
-    Region region = RegionUtil.getRegionByTag(regionName);
-    long seasonStartTime = getPatchStartTime(region.getTag(), Season.getLatest().getId()) * Constants.SECOND_TO_MILLI;
+    Region region = RegionEnum.getRegionByTag(regionName);
+    long seasonStartTime =
+        getPatchStartTime(region.getTag(), Season.getLatest().getId()) * Constants.SECOND_TO_MILLI;
     Summoner summoner = Orianna.summonerWithAccountId(accountId).withRegion(region).get();
     collectMatches(summoner, region, seasonStartTime);
     DataCollectionEvent collectionEvent = new DataCollectionEvent(this, "this is a test");
@@ -108,7 +108,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
 
   @Async
   public void prepareUpdate(String summonerName, String regionName) {
-    Region region = RegionUtil.getRegionByTag(regionName);
+    Region region = RegionEnum.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(summonerName).withRegion(region).get();
     updateMatchesForSummoner(summoner, region);
   }
@@ -142,11 +142,12 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
   }
 
   private void updateMatchesForSummoner(Summoner summoner, Region region) {
-    HashSet<String> summonersTopull = new HashSet<>();
+    HashSet<String> summonersToPull = new HashSet<>();
     HashSet<Long> unPulledMatchIds = new HashSet<>();
 
     DateTime startUpdateTime = createOrUpdateSummonerRecord(summoner);
-    long seasonStartTime = getPatchStartTime(region.getTag(), Season.getLatest().getId()) * Constants.SECOND_TO_MILLI;
+    long seasonStartTime =
+        getPatchStartTime(region.getTag(), Season.getLatest().getId()) * Constants.SECOND_TO_MILLI;
     MatchHistory matches = filterMatchHistory(summoner, millsToDateTime(seasonStartTime),
         startUpdateTime);
     for (Match match : matches) {
@@ -157,12 +158,12 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
       Match newMatch = Match.withId(newMatchId).withRegion(region).get();
       for (Participant p : newMatch.getParticipants()) {
         if (!summoner.getAccountId().equals(p.getSummoner().getAccountId())) {
-          summonersTopull.add(p.getSummoner().getId());
+          summonersToPull.add(p.getSummoner().getId());
         }
       }
       unPulledMatchIds.remove(newMatchId);
     }
-    UpdateMatchesEvent updateMatchesEvent = new UpdateMatchesEvent(this, summonersTopull,
+    UpdateMatchesEvent updateMatchesEvent = new UpdateMatchesEvent(this, summonersToPull,
         region.getTag());
     eventPublisher.publishEvent(updateMatchesEvent);
   }
@@ -197,9 +198,11 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
       while (!unPulledMatchIds.isEmpty()) {
         long newMatchId = unPulledMatchIds.iterator().next();
         Match newMatch = Match.withId(newMatchId).withRegion(region).get();
-        for (Participant p : newMatch.getParticipants()) {
-          if (!pulledSummonerIds.contains(p.getSummoner().getId())) {
-            unPulledSummonerIds.add(p.getSummoner().getId());
+        if (newMatch != null) {
+          for (Participant p : newMatch.getParticipants()) {
+            if (!pulledSummonerIds.contains(p.getSummoner().getId())) {
+              unPulledSummonerIds.add(p.getSummoner().getId());
+            }
           }
         }
         unPulledMatchIds.remove(newMatchId);

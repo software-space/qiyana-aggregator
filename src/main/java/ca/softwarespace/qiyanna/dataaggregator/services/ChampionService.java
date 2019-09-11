@@ -5,7 +5,7 @@ import ca.softwarespace.qiyanna.dataaggregator.models.dao.AggregatedChampionDto;
 import ca.softwarespace.qiyanna.dataaggregator.models.dto.ChampionDto;
 import ca.softwarespace.qiyanna.dataaggregator.repositories.AggregatedChampionRepository;
 import ca.softwarespace.qiyanna.dataaggregator.util.AggregatedChampionConsumer;
-import ca.softwarespace.qiyanna.dataaggregator.util.RegionUtil;
+import ca.softwarespace.qiyanna.dataaggregator.util.RegionEnum;
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.Queue;
 import com.merakianalytics.orianna.types.common.Region;
@@ -36,7 +36,7 @@ public class ChampionService {
 
   public List<AggregatedChampionDto> aggregateChampionStatsBySummoner(String summonerName,
       String championName, String regionName) {
-    Region region = RegionUtil.getRegionByTag(regionName);
+    Region region = RegionEnum.getRegionByTag(regionName);
     //TODO: add support for region here
     Summoner summoner = Orianna.summonerNamed(summonerName)
         .withRegion(region)

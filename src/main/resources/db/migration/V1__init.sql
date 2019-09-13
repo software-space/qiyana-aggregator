@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS Season CASCADE;
 DROP TABLE IF EXISTS Lane CASCADE;
 DROP TABLE IF EXISTS Patch CASCADE;
 DROP TABLE IF EXISTS Region CASCADE;
-DROP TABLE IF EXISTS Rank CASCADE;
+DROP TABLE IF EXISTS Tier CASCADE;
 DROP TABLE IF EXISTS Summoner_Stats CASCADE;
 DROP TABLE IF EXISTS Champion_Stats CASCADE;
 
@@ -62,11 +62,11 @@ CREATE TABLE Region
   primary key (regionId)
 );
 
-CREATE TABLE Rank
+CREATE TABLE Tier
 (
-  rankId    serial,
+  tierId    serial,
   shortName varchar(20),
-  primary key (rankId)
+  primary key (tierId)
 );
 
 CREATE TABLE Summoner_Stats
@@ -87,7 +87,7 @@ CREATE TABLE Champion_Stats
   championId      integer REFERENCES Champion (championId),
   laneId          integer REFERENCES Lane (laneId),
   queueId         integer REFERENCES Queue (queueId),
-  rankId          integer REFERENCES Rank (rankId),
+  tierId          integer REFERENCES Tier (tierId),
   patchId         integer REFERENCES Patch (patchId),
   regionId        integer REFERENCES Region (regionId),
   winRate         float,

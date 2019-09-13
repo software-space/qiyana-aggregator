@@ -1,4 +1,4 @@
-package ca.softwarespace.qiyanna.dataaggregator.models;
+package ca.softwarespace.qiyanna.dataaggregator.models.dto;
 
 import com.merakianalytics.orianna.types.common.Division;
 import com.merakianalytics.orianna.types.common.Tier;
@@ -21,6 +21,6 @@ public class SummonerDto {
   private int leaguePoints;
   private int wins;
   private int losses;
-  private double winrate;
+  private double winRate;
 
 }

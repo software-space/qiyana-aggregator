@@ -22,7 +22,8 @@ stages:
   - deploy
 
 services:
-  - postgres:latest
+  - postgres:11.5-alpine
+  - mongo
 
 variables:
   # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
@@ -33,9 +34,9 @@ variables:
   # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS_TEST: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true -DargLine=-Dspring.profiles.active=test"
   HEROKU_API_KEY: ""
-  POSTGRES_DB: riot
-  POSTGRES_USER: riot
-  POSTGRES_PASSWORD: "gr007,,"
+  POSTGRES_DB: qiyanna
+  POSTGRES_USER: qiyanna
+  POSTGRES_PASSWORD: "qiyanna123"
 
 connect:
   image: postgres

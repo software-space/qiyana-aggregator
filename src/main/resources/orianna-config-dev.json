@@ -135,8 +135,8 @@
             "unit": "HOURS"
           },
           "com.merakianalytics.orianna.types.core.summoner.Summoner": {
-            "period": 1,
-            "unit": "HOURS"
+            "period": 15,
+            "unit": "MINUTES"
           },
           "com.merakianalytics.orianna.types.core.match.Timeline": {
             "period": 6,
@@ -294,8 +294,8 @@
               "unit": "MINUTES"
             },
             "com.merakianalytics.orianna.types.dto.summoner.Summoner": {
-              "period": 1,
-              "unit": "DAYS"
+              "period": 15,
+              "unit": "MINUTES"
             },
             "com.merakianalytics.orianna.types.dto.thirdpartycode.VerificationString": {
               "period": 5,

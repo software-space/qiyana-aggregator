@@ -15,7 +15,7 @@ public class Constants {
   }
 
   public static List<Queue> getQueuesList() {
-    ArrayList<Queue> queues = new ArrayList<>();
+    List<Queue> queues = new ArrayList<>();
     queues.add(Queue.ARAM);
     queues.add(Queue.BILGEWATER_ARAM_5X5);
     queues.add(Queue.NORMAL_3X3_BLIND_PICK);

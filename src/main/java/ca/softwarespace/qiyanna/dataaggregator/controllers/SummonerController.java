@@ -20,9 +20,9 @@ public class SummonerController {
     this.matchesCollectionService = matchesCollectionService;
   }
 
-  @GetMapping("/{sName}")
-  public String testAggregateV2(@PathVariable String sName, @RequestParam String regionName) {
-    matchesCollectionService.prepareDataCollection(sName, regionName, null);
+  @GetMapping("/{summonerName}")
+  public String testAggregateV2(@PathVariable String summonerName, @RequestParam String regionName) {
+    matchesCollectionService.prepareDataCollection(summonerName, regionName, null);
     return "Welcome to V2";
   }
 

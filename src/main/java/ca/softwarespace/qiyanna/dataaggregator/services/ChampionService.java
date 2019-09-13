@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Deprecated
 public class ChampionService {
 
   private final AggregatedChampionRepository aggregatedChampionRepository;
@@ -37,11 +38,9 @@ public class ChampionService {
   public List<AggregatedChampionDto> aggregateChampionStatsBySummoner(String summonerName,
       String championName, String regionName) {
     Region region = RegionEnum.getRegionByTag(regionName);
-    //TODO: add support for region here
     Summoner summoner = Orianna.summonerNamed(summonerName)
         .withRegion(region)
         .get();
-    // TODO include queue in request when orianna is updated to have updated queue ids
     MatchHistory matches = MatchHistory.forSummoner(summoner)
         .withSeasons(Season.getLatest())
         .withQueues(
@@ -93,7 +92,7 @@ public class ChampionService {
 
   private ChampionDto buildChampionDto(Participant participant, Duration matchDuration) {
     ParticipantStats stats = participant.getStats();
-    if (stats == null) { // TODO check why stats are sometimes null
+    if (stats == null) {
       return null;
     }
 

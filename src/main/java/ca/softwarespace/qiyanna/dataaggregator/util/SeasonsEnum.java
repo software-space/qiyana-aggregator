@@ -1,5 +1,7 @@
 package ca.softwarespace.qiyanna.dataaggregator.util;
 
+import lombok.Getter;
+
 public enum SeasonsEnum {
   PRESEASON_3(0),
   SEASON_3(1),
@@ -16,13 +18,10 @@ public enum SeasonsEnum {
   PRESEASON_2019(12),
   SEASON_2019(13);
 
+  @Getter
   private final int seasonId;
 
   SeasonsEnum(int seasonId) {
     this.seasonId = seasonId;
-  }
-
-  public int getSeasonId() {
-    return seasonId;
   }
 }

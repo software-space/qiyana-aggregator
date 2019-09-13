@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.merakianalytics.orianna.types.common.Region;
 import java.util.Map;
+import lombok.Getter;
 
 public enum RegionEnum {
   NA("NA", Region.NORTH_AMERICA),
@@ -17,21 +18,17 @@ public enum RegionEnum {
   RU("RU", Region.RUSSIA),
   TR("TR", Region.TURKEY);
 
+  @Getter
   private final String tag;
+
+  @Getter
   private final Region region;
+
   private static final Map<String, Region> BY_TAG = getByTag();
 
   RegionEnum(String tag, Region region) {
     this.tag = tag;
     this.region = region;
-  }
-
-  public String getTag() {
-    return tag;
-  }
-
-  public Region getRegion() {
-    return region;
   }
 
   public static Region getRegionByTag(final String tag) {

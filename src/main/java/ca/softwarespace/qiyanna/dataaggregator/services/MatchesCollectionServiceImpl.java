@@ -219,7 +219,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
         .fetchAny();
 
     com.merakianalytics.orianna.types.core.league.LeagueEntry leaguePosition = newSummoner
-        .getLeaguePosition(Queue.RANKED_SOLO_5X5);
+        .getLeaguePosition(Queue.RANKED_SOLO);
     if (leaguePosition != null) {
       RankRecord rankRecord = dsl.selectFrom(Rank.RANK)
           .where(Rank.RANK.NAME.like(leaguePosition.getDivision().name())).fetchAny();

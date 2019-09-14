@@ -44,7 +44,7 @@ public class ChampionService {
     MatchHistory matches = MatchHistory.forSummoner(summoner)
         .withSeasons(Season.getLatest())
         .withQueues(
-            Queue.RANKED_SOLO_5X5)
+            Queue.RANKED_SOLO)
         .withChampions((championName == null || championName.isEmpty()) ?
             Collections.emptySet() :
             Orianna.championsNamed(championName).get())

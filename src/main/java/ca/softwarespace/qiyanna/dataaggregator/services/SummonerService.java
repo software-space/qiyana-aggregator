@@ -20,17 +20,17 @@ public class SummonerService {
     Region region = RegionEnum.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(name).withRegion(region).get();
 
-    int wins = summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getWins();
-    int losses = summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getLosses();
+    int wins = summoner.getLeaguePosition(Queue.RANKED_SOLO).getWins();
+    int losses = summoner.getLeaguePosition(Queue.RANKED_SOLO).getLosses();
     double winRate = (double) wins / ((double) wins + (double) losses);
 
     return SummonerDto.builder()
         .accountId(summoner.getAccountId())
         .name(summoner.getName())
         .level(summoner.getLevel())
-        .tier(summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getTier())
-        .division(summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getDivision())
-        .leaguePoints(summoner.getLeaguePosition(Queue.RANKED_SOLO_5X5).getLeaguePoints())
+        .tier(summoner.getLeaguePosition(Queue.RANKED_SOLO).getTier())
+        .division(summoner.getLeaguePosition(Queue.RANKED_SOLO).getDivision())
+        .leaguePoints(summoner.getLeaguePosition(Queue.RANKED_SOLO).getLeaguePoints())
         .wins(wins)
         .losses(losses)
         .winRate(winRate)

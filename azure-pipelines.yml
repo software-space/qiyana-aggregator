@@ -39,7 +39,7 @@ steps:
   inputs:
     mavenPomFile: 'pom.xml'
     goals: 'test'
-    options: 'MAVEN_CLI_OPTS_TEST'
+    options: $(MAVEN_CLI_OPTS_TEST)
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'

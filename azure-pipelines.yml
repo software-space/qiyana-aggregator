@@ -54,15 +54,3 @@ steps:
     checkStyleRunAnalysis: true
     pmdRunAnalysis: true
     findBugsRunAnalysis: true
-
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: package
-    options: '-DskipTests'
-    javaHomeOption: 'JDKVersion'
-    mavenVersionOption: 'Default'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
-    sonarQubeRunAnalysis: false
-

@@ -3,7 +3,7 @@ name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)
 resources:
   containers:
     - container: postgres
-      image: postgres:11.5alpine
+      image: postgres:latest
     - container: mongo
       image: mongo:latest
 

@@ -24,10 +24,11 @@ steps:
 
 - script: mvn install -B -e
 - task: Maven@3
+  displayName: Test compile
   inputs:
     mavenPomFile: 'pom.xml'
     goals: 'test-compile'
-    options: '--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true -DargLine=-Dspring.profiles.active=test'
+    options: $(MAVEN_CLI_OPTS_TEST)
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
@@ -40,6 +41,7 @@ steps:
     findBugsRunAnalysis: true
 
 - task: Maven@3
+  displayName: Run test
   inputs:
     mavenPomFile: 'pom.xml'
     goals: 'test'

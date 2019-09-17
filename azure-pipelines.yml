@@ -7,9 +7,6 @@ resources:
     - container: mongo
       image: mongo:latest
 
-services:
-  postgres: postgres
-  mongo: mongo
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$(Pipeline.Workspace)/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"

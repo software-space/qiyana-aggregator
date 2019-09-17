@@ -1,0 +1,64 @@
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+resources:
+  containers:
+    - container: postgres
+      image: postgres:11.5alpine
+    - container: mongo
+      image: mongo:latest
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$(Pipeline.Workspace)/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_CLI_OPTS_TEST: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true -DargLine=-Dspring.profiles.active=test"
+
+steps:
+- task: CacheBeta@0
+  inputs:
+    key: maven | **/pom.xml
+    path: $(Pipeline.Workspace)/.m2/repository
+  displayName: Cache Maven local repo
+
+- script: mvn install -B -e
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'test-compile'
+    options: '--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true -DargLine=-Dspring.profiles.active=test'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+    checkStyleRunAnalysis: true
+    pmdRunAnalysis: true
+    findBugsRunAnalysis: true
+
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'test'
+    options: $(MAVEN_CLI_OPTS_TEST)
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+    checkStyleRunAnalysis: true
+    pmdRunAnalysis: true
+    findBugsRunAnalysis: true
+
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    options: '-DskipTests'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false

@@ -1,4 +1,6 @@
-[![MIT Licensed](https://img.shields.io/badge/license-Apache2.0-green.svg)](https://github.com/fastboyz/Qiyana-Data-aggregator/blob/master/LICENSE)[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsoftware-space%2Fqiyana-aggregator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsoftware-space%2Fqiyana-aggregator?ref=badge_shield)
+[![MIT Licensed](https://img.shields.io/badge/license-Apache2.0-green.svg)](https://github.com/fastboyz/Qiyana-Data-aggregator/blob/master/LICENSE)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsoftware-space%2Fqiyana-aggregator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsoftware-space%2Fqiyana-aggregator?ref=badge_shield)
+[![Build Status](https://dev.azure.com/softwarespace-hq/Qiyanna/_apis/build/status/software-space.qiyana-aggregator?branchName=master)](https://dev.azure.com/softwarespace-hq/Qiyanna/_build/latest?definitionId=1&branchName=master)
 
 
 This Java project is meant to be a data aggregator for the riot API, The ultimate

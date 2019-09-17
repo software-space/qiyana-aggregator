@@ -68,7 +68,7 @@ public class ChampionServiceTest {
     double averageViAssists = ((8 + 12 + 3) / (double) 3);
     double averageViCs = ((120 + 144 + 167) / (double) 3);
     double averageViGold = ((11452 + 13633 + 14200) / (double) 3);
-    double averageCsPerMin = ((5.7 + 6.1 + 5.4) / (double) 3);
+    double averageCsPerMin = ((5.8 + 6.1 + 5.4) / (double) 3);
     int played = 3;
     int wins = 2;
     int losses = 1;

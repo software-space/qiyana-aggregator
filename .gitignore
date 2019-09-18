@@ -152,4 +152,4 @@ buildNumber.properties
 ### VS Code ###
 .vscode/
 
-### src/main/java/ca/softwarespace/qiyanna/dataaggregator/models/generated/
+src/main/java/ca/softwarespace/qiyanna/dataaggregator/models/generated/

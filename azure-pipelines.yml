@@ -4,13 +4,18 @@ resources:
   containers:
     - container: postgres
       image: postgres:latest
+      ports:
+      - 5432:5432
+      env:
+        POSTGRES_DB: $(QIYANNA_CONFIG_DATABASE_USERNAME)
+        POSTGRES_USER: $(QIYANNA_CONFIG_DATABASE_USERNAME)
+        POSTGRES_PASSWORD: $(QIYANNA_CONFIG_DATABASE_PASSWORD)
     - container: mongo
       image: mongo:latest
 
 services:
   postgres: postgres
   mongo: mongo
-
 
 
 variables:

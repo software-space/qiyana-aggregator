@@ -8,9 +8,11 @@ import java.util.List;
  * Author: Steve Mbiele Date: 5/15/2019
  */
 public class Constants {
-
-  public static final int SOLO_QUEUE_RANKED_ID = 420;
   public static final long SECOND_TO_MILLI= 1000;
+  public static final String MATCH_DOCUMENT_QUEUE_KEY = "queueId";
+  public static final String MATCH_DOCUMENT_PARTICIPANT_CHAMPION_KEY = "participants.championId";
+  public static final String MATCH_DOCUMENT_PARTICIPANT_STAT_WIN = "participants.stats.win";
+  public static final String RESULT_KEY = "result";
   private Constants() {
   }
 

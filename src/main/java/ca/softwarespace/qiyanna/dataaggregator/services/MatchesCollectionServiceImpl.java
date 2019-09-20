@@ -259,7 +259,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     record.setLosses(leaguePosition.getLosses());
     record.setWins(leaguePosition.getWins());
     record.setSummonerid(newSummoner.getAccountId());
-    record.setQueueid(Constants.SOLO_QUEUE_RANKED_ID);
+    record.setQueueid(leaguePosition.getQueue().getId());
     record.setRankid(rankRecord.getRankid());
     record.setTierid(tierRecord.getTierid());
     return record;

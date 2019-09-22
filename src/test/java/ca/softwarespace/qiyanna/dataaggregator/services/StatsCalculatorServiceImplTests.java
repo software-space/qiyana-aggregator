@@ -22,6 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.longThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -139,7 +140,6 @@ public class StatsCalculatorServiceImplTests {
 
     }
 
-
     @Test
     public void getAmountOfMatchesPlayedByChampionId() {
         int selectedChampionId = 1;
@@ -159,5 +159,15 @@ public class StatsCalculatorServiceImplTests {
         Assert.assertEquals(10.00,championPickrate,0);
     }
 
+    @Test
+    public void getChampionBanRateByChampionIdAndPlatformAndQueueTypeShouldReturnTheBanRate() {
+        int selectedChampion = 1;
+        when(championStatsRepository.countAllByTeams_Bans_ChampionIdAndPlatformIdAndQueueId(selectedChampion,platform.getTag(),queueType.getId())).thenReturn(50L);
+        when(championStatsRepository.count()).thenReturn(100L);
+        double championBanRate = statsCalculatorService.getChampionBanRateByChampionIdAndPlatformAndQueueType(selectedChampion,platform,queueType);
+        Assert.assertEquals(50,championBanRate,0);
+
+
+    }
 
 }

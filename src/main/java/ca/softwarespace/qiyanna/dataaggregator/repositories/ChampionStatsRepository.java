@@ -10,4 +10,5 @@ import java.util.List;
 public interface ChampionStatsRepository extends MongoRepository<MatchDto, String> {
     List<MatchDto> findByParticipants_ChampionIdAndPlatformIdAndQueueId(int ChampionId, String platformTag, int queueId);
     long countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(int championId, String platformTag, int queueId);
+    long countAllByTeams_Bans_ChampionIdAndPlatformIdAndQueueId(int championId, String platformTag, int queuId);
 }

@@ -11,4 +11,6 @@ public interface StatsCalculatorService extends ApplicationListener<DataCollecti
     long getMatchesPlayedByChampionIdAndPlatformAndQueueType(int selectedChampionId, Platform platform, Queue queueType);
 
     double getChampionPickRateByRegionAndQueueType(int selectedChampion, Platform platform, Queue queueType);
+
+    double getChampionBanRateByChampionIdAndPlatformAndQueueType(int selectedChampion, Platform platform, Queue queueType);
 }

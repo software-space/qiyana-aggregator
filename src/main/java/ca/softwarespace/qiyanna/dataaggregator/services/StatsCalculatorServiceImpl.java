@@ -73,4 +73,13 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
 
   }
 
+  @Override
+  public double getChampionBanRateByChampionIdAndPlatformAndQueueType(int selectedChampion, Platform platform, Queue queueType) {
+    long amountOfGamesChampionBanned = championStatsRepository.countAllByTeams_Bans_ChampionIdAndPlatformIdAndQueueId(selectedChampion,platform.getTag(),queueType.getId());
+    long totalGamesPlayed = championStatsRepository.count();
+
+    return ((double) amountOfGamesChampionBanned / totalGamesPlayed) * 100;
+
+  }
+
 }

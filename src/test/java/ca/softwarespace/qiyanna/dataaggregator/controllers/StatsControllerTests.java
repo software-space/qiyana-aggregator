@@ -35,36 +35,50 @@ public class StatsControllerTests {
     }
 
     @Test
-    public void getWinRateForChampionWithIdShouldReturnCalculatedWinrateForThatChampion() {
+    public void getWinRateForChampionWithIdAndPlatformAndQueueTypeShouldReturnCalculatedWinrateForThatChampion() {
 
         when(statsCalculatorService.getWinrateForChampionWithIdAndPlatformAndQueueType(1,platform,queueType)).thenReturn(1.3);
-        ResponseEntity<Double> receivedWinrate = statsController.getWinRateForChampion(1, platform, queueType);
+        ResponseEntity<Double> receivedWinrate = statsController.getWinRateForChampionByChampionIdAndPlatformAndQueueType(1, platform, queueType);
         Assert.assertNotNull(receivedWinrate);
         Assert.assertEquals(new Double(1.3), receivedWinrate.getBody());
     }
 
     @Test
-    public void getAmountOfMatchesPlayedByChampionIdShouldReturnTheAmountOfGamesAChampionHasPlayed() {
+    public void getAmountOfMatchesPlayedByChampionIdAndPlatformAndQueueTypeShouldReturnTheAmountOfGamesAChampionHasPlayed() {
         int selectedChampionId = 1;
         when(statsCalculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(selectedChampionId,platform,queueType)).thenReturn(9L);
 
-        ResponseEntity<Long> receivedAmountOfGamesPlayed = statsController.getAmountOfGamesPlayedByChampionId(selectedChampionId, platform, queueType);
+        ResponseEntity<Long> receivedAmountOfGamesPlayed = statsController.getAmountOfGamesPlayedByChampionIdAndPlatformAndQueueType(selectedChampionId, platform, queueType);
         Assert.assertNotNull(receivedAmountOfGamesPlayed);
         Assert.assertNotNull(receivedAmountOfGamesPlayed.getBody());
         Assert.assertEquals(9L, receivedAmountOfGamesPlayed.getBody(),0);
     }
 
     @Test
-    public void getChampionPickRateByRegionAndQueueTypeShouldReturnThePickRateOfAChampion() {
+    public void getChampionPickRateByChampionIdAndPlatformAndQueueTypeShouldReturnThePickRateOfAChampion() {
         int selectedChampion = 1;
 
         when(statsCalculatorService.getChampionPickRateByRegionAndQueueType(selectedChampion,platform,queueType)).thenReturn(1.2);
 
-        ResponseEntity<Double> receivedPickRate = statsController.getChampionPickRateByRegionAndQueueType(selectedChampion,platform,queueType);
+        ResponseEntity<Double> receivedPickRate = statsController.getChampionPickRateByPlatformAndQueueType(selectedChampion,platform,queueType);
 
         Assert.assertNotNull(receivedPickRate);
         Assert.assertNotNull(receivedPickRate.getBody());
         Assert.assertEquals(1.2,receivedPickRate.getBody(),0);
+
+    }
+
+    @Test
+    public void getChampionBanRateByChampionIdAndPlatformAndQueueTypeShouldReturnTheChampionBanrate() {
+        int selectedChampion = 1;
+
+        when(statsCalculatorService.getChampionBanRateByChampionIdAndPlatformAndQueueType(selectedChampion,platform,queueType)).thenReturn(10.0);
+
+        ResponseEntity<Double> receivedBanRate = statsController.getChampionBanRateByChampionIdPlatformAndQueueType(selectedChampion,platform,queueType);
+
+        Assert.assertNotNull(receivedBanRate);
+        Assert.assertNotNull(receivedBanRate.getBody());
+        Assert.assertEquals(10.0,receivedBanRate.getBody(),0);
 
     }
 

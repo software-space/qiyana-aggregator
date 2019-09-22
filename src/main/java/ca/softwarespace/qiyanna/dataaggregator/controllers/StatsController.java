@@ -22,7 +22,7 @@ public class StatsController {
 
 
     @RequestMapping("/winrate/{championId}/{platform}/{queueType}")
-    public ResponseEntity<Double> getWinRateForChampion(@PathVariable("championId") int championId,
+    public ResponseEntity<Double> getWinRateForChampionByChampionIdAndPlatformAndQueueType(@PathVariable("championId") int championId,
                                                         @PathVariable("platform") Platform platform,
                                                         @PathVariable("queueType") Queue queueType) {
         double winrateForChampionWithIdAndPlatformAndQueueType =
@@ -33,7 +33,7 @@ public class StatsController {
     }
 
     @RequestMapping("/played/{championId}/{platform}/{queueType}")
-    public ResponseEntity<Long> getAmountOfGamesPlayedByChampionId(@PathVariable("championId") int championId,
+    public ResponseEntity<Long> getAmountOfGamesPlayedByChampionIdAndPlatformAndQueueType(@PathVariable("championId") int championId,
                                                                    @PathVariable("platform") Platform platform,
                                                                    @PathVariable("queueType") Queue queueType) {
         long amountOfGamesPlayedByChampion = calculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(championId, platform,queueType);
@@ -41,10 +41,18 @@ public class StatsController {
     }
 
     @RequestMapping("/pickrate/{championId}/{platform}/{queueType}")
-    public ResponseEntity<Double> getChampionPickRateByRegionAndQueueType(@PathVariable("championId") int championId,
+    public ResponseEntity<Double> getChampionPickRateByPlatformAndQueueType(@PathVariable("championId") int championId,
                                                                         @PathVariable("platform") Platform platform,
                                                                         @PathVariable("queueType") Queue queueType) {
         double championPickRate = calculatorService.getChampionPickRateByRegionAndQueueType(championId,platform,queueType);
         return ResponseEntity.ok(championPickRate);
+    }
+
+    @RequestMapping("/banrate/{championId}/{platform}/{queueType}")
+    public ResponseEntity<Double> getChampionBanRateByChampionIdPlatformAndQueueType(@PathVariable("championId") int championId,
+                                                                                     @PathVariable("platform") Platform platform,
+                                                                                     @PathVariable("queueType") Queue queueType) {
+        double championBanRate = calculatorService.getChampionBanRateByChampionIdAndPlatformAndQueueType(championId,platform,queueType);
+        return ResponseEntity.ok(championBanRate);
     }
 }

@@ -149,7 +149,7 @@ public class StatsCalculatorServiceImplTests {
     }
 
     @Test
-    public void getChampionPickRateByChampionIdAndPlatformAndRegionShouldReturnThePickrate() {
+    public void getChampionPickRateByChampionIdAndPlatformAndQueueTypeShouldReturnThePickrate() {
         int selectedChampionId = 1;
         when(championStatsRepository.countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(selectedChampionId,platform.getTag(),queueType.getId())).thenReturn(100L);
         when(championStatsRepository.count()).thenReturn(1000L);

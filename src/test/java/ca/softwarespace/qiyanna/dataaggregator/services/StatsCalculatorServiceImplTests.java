@@ -138,5 +138,15 @@ public class StatsCalculatorServiceImplTests {
     }
 
 
+    @Test
+    public void getAmountOfMatchesPlayedByChampionId() {
+        int selectedChampionId = 1;
+        Platform platform = Platform.EUROPE_WEST;
+        Queue queueType = Queue.RANKED_SOLO;
+        when(championStatsRepository.countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(selectedChampionId,platform.getTag(),queueType.getId())).thenReturn(7L);
+        long gamesPlayed = statsCalculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(selectedChampionId,platform,queueType);
+        Assert.assertEquals(7,gamesPlayed);
+    }
+
 
 }

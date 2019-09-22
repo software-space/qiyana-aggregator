@@ -8,5 +8,6 @@ import org.springframework.context.ApplicationListener;
 public interface StatsCalculatorService extends ApplicationListener<DataCollectionEvent> {
 
     double getWinrateForChampionWithIdAndPlatformAndQueueType(int championId, Platform platform, Queue queueType);
+    long getMatchesPlayedByChampionIdAndPlatformAndQueueType(int selectedChampionId, Platform platform, Queue queueType);
 
 }

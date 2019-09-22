@@ -38,5 +38,18 @@ public class StatsControllerTests {
         Assert.assertEquals(new Double(1.3), receivedWinrate.getBody());
     }
 
+    @Test
+    public void getAmountOfMatchesPlayedByChampionIdShouldReturnTheAmountOfGamesAChampionHasPlayed() {
+        int selectedChampionId = 1;
+        Platform platform = Platform.EUROPE_WEST;
+        Queue queueType = Queue.RANKED_SOLO;
+        when(statsCalculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(selectedChampionId,platform,queueType)).thenReturn(9L);
+
+        ResponseEntity<Long> receivedAmountOfGamesPlayed = statsController.getAmountOfGamesPlayedByChampionId(selectedChampionId, platform, queueType);
+        Assert.assertNotNull(receivedAmountOfGamesPlayed);
+        Assert.assertNotNull(receivedAmountOfGamesPlayed.getBody());
+        Assert.assertEquals(9L, receivedAmountOfGamesPlayed.getBody(),0);
+    }
+
 
 }

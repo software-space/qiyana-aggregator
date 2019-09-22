@@ -32,4 +32,11 @@ public class StatsController {
         return ResponseEntity.ok(winrateForChampionWithIdAndPlatformAndQueueType);
     }
 
+    @RequestMapping("/played/{championId}/{platform}/{queueType}")
+    public ResponseEntity<Long> getAmountOfGamesPlayedByChampionId(@PathVariable("championId") int championId,
+                                                                   @PathVariable("platform") Platform platform,
+                                                                   @PathVariable("queueType") Queue queueType) {
+        long amountOfGamesPlayedByChampion = calculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(championId, platform,queueType);
+        return ResponseEntity.ok(amountOfGamesPlayedByChampion);
+    }
 }

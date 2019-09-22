@@ -58,4 +58,10 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
     }
     return calculatePercentage(amountOfWins, matches.size());
   }
+
+  @Override
+  public long getMatchesPlayedByChampionIdAndPlatformAndQueueType(int selectedChampionId, Platform platform, Queue queueType) {
+    return championStatsRepository.countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(selectedChampionId,platform.getTag(),queueType.getId());
+  }
+
 }

@@ -38,13 +38,12 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
     log.info(dataCollectionEvent.getMessage());
   }
 
-
-  private boolean getWinOrLose(MatchDto match, int championId) {
+  public boolean getWinOrLose(MatchDto match, int championId) {
     Optional<Participant> selectedParticipantWithProvidedChampion = match.getParticipants().stream().filter(u -> u.getChampionId() == championId).findFirst();
     return selectedParticipantWithProvidedChampion.map(participant -> participant.getStats().isWin()).orElse(false);
   }
 
-  private double calculatePercentage(long wins, long gamesPlayed) {
+  public double calculatePercentage(long wins, long gamesPlayed) {
     return (double) wins / gamesPlayed * 100;
   }
 

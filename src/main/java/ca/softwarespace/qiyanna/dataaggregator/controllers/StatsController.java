@@ -39,4 +39,12 @@ public class StatsController {
         long amountOfGamesPlayedByChampion = calculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(championId, platform,queueType);
         return ResponseEntity.ok(amountOfGamesPlayedByChampion);
     }
+
+    @RequestMapping("/pickrate/{championId}/{platform}/{queueType}")
+    public ResponseEntity<Double> getChampionPickRateByRegionAndQueueType(@PathVariable("championId") int championId,
+                                                                        @PathVariable("platform") Platform platform,
+                                                                        @PathVariable("queueType") Queue queueType) {
+        double championPickRate = calculatorService.getChampionPickRateByRegionAndQueueType(championId,platform,queueType);
+        return ResponseEntity.ok(championPickRate);
+    }
 }

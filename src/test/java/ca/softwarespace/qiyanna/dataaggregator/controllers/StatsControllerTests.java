@@ -24,16 +24,21 @@ public class StatsControllerTests {
     @InjectMocks
     private StatsController statsController;
 
+    private Platform platform;
+    private Queue queueType;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        platform = Platform.EUROPE_WEST;
+        queueType = Queue.RANKED_SOLO;
     }
 
     @Test
     public void getWinRateForChampionWithIdShouldReturnCalculatedWinrateForThatChampion() {
 
-        when(statsCalculatorService.getWinrateForChampionWithIdAndPlatformAndQueueType(1,Platform.EUROPE_WEST,Queue.RANKED_SOLO)).thenReturn(1.3);
-        ResponseEntity<Double> receivedWinrate = statsController.getWinRateForChampion(1, Platform.EUROPE_WEST, Queue.RANKED_SOLO);
+        when(statsCalculatorService.getWinrateForChampionWithIdAndPlatformAndQueueType(1,platform,queueType)).thenReturn(1.3);
+        ResponseEntity<Double> receivedWinrate = statsController.getWinRateForChampion(1, platform, queueType);
         Assert.assertNotNull(receivedWinrate);
         Assert.assertEquals(new Double(1.3), receivedWinrate.getBody());
     }
@@ -41,14 +46,26 @@ public class StatsControllerTests {
     @Test
     public void getAmountOfMatchesPlayedByChampionIdShouldReturnTheAmountOfGamesAChampionHasPlayed() {
         int selectedChampionId = 1;
-        Platform platform = Platform.EUROPE_WEST;
-        Queue queueType = Queue.RANKED_SOLO;
         when(statsCalculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(selectedChampionId,platform,queueType)).thenReturn(9L);
 
         ResponseEntity<Long> receivedAmountOfGamesPlayed = statsController.getAmountOfGamesPlayedByChampionId(selectedChampionId, platform, queueType);
         Assert.assertNotNull(receivedAmountOfGamesPlayed);
         Assert.assertNotNull(receivedAmountOfGamesPlayed.getBody());
         Assert.assertEquals(9L, receivedAmountOfGamesPlayed.getBody(),0);
+    }
+
+    @Test
+    public void getChampionPickRateByRegionAndQueueTypeShouldReturnThePickRateOfAChampion() {
+        int selectedChampion = 1;
+
+        when(statsCalculatorService.getChampionPickRateByRegionAndQueueType(selectedChampion,platform,queueType)).thenReturn(1.2);
+
+        ResponseEntity<Double> receivedPickRate = statsController.getChampionPickRateByRegionAndQueueType(selectedChampion,platform,queueType);
+
+        Assert.assertNotNull(receivedPickRate);
+        Assert.assertNotNull(receivedPickRate.getBody());
+        Assert.assertEquals(1.2,receivedPickRate.getBody(),0);
+
     }
 
 

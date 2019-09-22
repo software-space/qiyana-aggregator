@@ -64,4 +64,13 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
     return championStatsRepository.countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(selectedChampionId,platform.getTag(),queueType.getId());
   }
 
+  @Override
+  public double getChampionPickRateByRegionAndQueueType(int selectedChampion, Platform platform, Queue queueType) {
+     long amountOfGamesPlayedWithChampion = championStatsRepository.countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(selectedChampion,platform.getTag(),queueType.getId());
+     long totalGamesPlayed = championStatsRepository.count();
+
+     return ((double)totalGamesPlayed / amountOfGamesPlayedWithChampion);
+
+  }
+
 }

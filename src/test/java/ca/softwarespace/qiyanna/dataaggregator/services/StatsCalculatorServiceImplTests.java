@@ -33,12 +33,17 @@ public class StatsCalculatorServiceImplTests {
     @Mock
     private ObjectMapper mapper;
 
+    private Platform platform;
+    private Queue queueType;
+
     @InjectMocks
     private StatsCalculatorServiceImpl statsCalculatorService;
 
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
+        platform = Platform.EUROPE_WEST;
+        queueType = Queue.RANKED_SOLO;
     }
 
     @Test
@@ -93,9 +98,6 @@ public class StatsCalculatorServiceImplTests {
     @Test
     public void getWinRateForChampionWithIdAndPlatformAndQueueTypeShouldReturnTheWinRateOfAChampion() {
 
-        Platform platform = Platform.EUROPE_WEST;
-        Queue queueType = Queue.RANKED_SOLO;
-
         Stats winStat = new StatsBuilder().withWin(true).build();
         Stats lossStat = new StatsBuilder().withWin(false).build();
         Participant participant1 = new ParticipantBuilder().withChampionId(1).withStats(winStat).build();
@@ -141,11 +143,20 @@ public class StatsCalculatorServiceImplTests {
     @Test
     public void getAmountOfMatchesPlayedByChampionId() {
         int selectedChampionId = 1;
-        Platform platform = Platform.EUROPE_WEST;
-        Queue queueType = Queue.RANKED_SOLO;
         when(championStatsRepository.countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(selectedChampionId,platform.getTag(),queueType.getId())).thenReturn(7L);
         long gamesPlayed = statsCalculatorService.getMatchesPlayedByChampionIdAndPlatformAndQueueType(selectedChampionId,platform,queueType);
         Assert.assertEquals(7,gamesPlayed);
+    }
+
+    @Test
+    public void getChampionPickRateByChampionIdAndPlatformAndRegionShouldReturnThePickrate() {
+        int selectedChampionId = 1;
+        when(championStatsRepository.countAllByParticipants_ChampionIdAndPlatformIdAndQueueId(selectedChampionId,platform.getTag(),queueType.getId())).thenReturn(100L);
+        when(championStatsRepository.count()).thenReturn(1000L);
+
+        double championPickrate = statsCalculatorService.getChampionPickRateByRegionAndQueueType(selectedChampionId,platform,queueType);
+
+        Assert.assertEquals(10.00,championPickrate,0);
     }
 
 

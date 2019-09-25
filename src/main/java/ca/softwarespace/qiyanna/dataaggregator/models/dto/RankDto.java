@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SummonerDto {
+public class RankDto {
 
-  private String accountId;
+  private int rankId;
   private String name;
-  private String puuid;
-  private String summonerId;
-  private int profileIconId;
-  private long summonerLevel;
-  private long revisionDate;
 }

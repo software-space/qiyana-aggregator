@@ -36,7 +36,7 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
   }
 
 
-  private void calculateChampionWins(int championId, int queueId, int roleId, int laneId,
+  public  void calculateChampionWins(int championId, int queueId, int roleId, int laneId,
       int tierId, int regionId) {
 
     MatchOperation firstMatchOperation = Aggregation

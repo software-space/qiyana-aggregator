@@ -54,7 +54,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MatchesCollectionServiceImpl implements MatchesCollectionService {
 
-  //  private final DSLContext dsl;
   private final SQLSummonerRepository sqlSummonerRepository;
   private final SQLAggregatorInfoRepository sqlAggregatorInfoRepository;
   private final SQLDefaultSummonerRepository sqlDefaultSummonerRepository;
@@ -98,7 +97,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
       }
       infoDto.setCount(infoDto.getCount() + 1);
       sqlAggregatorInfoRepository.update(infoDto);
-    } catch (RecordNotFoundException e) {
+    } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
   }
@@ -221,11 +220,15 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
       while (!unPulledMatchIds.isEmpty()) {
         long newMatchId = unPulledMatchIds.iterator().next();
         Match newMatch = Match.withId(newMatchId).withRegion(region).get();
-        if (newMatch != null) {
-          for (Participant p : newMatch.getParticipants()) {
-            if (!pulledSummonerIds.contains(p.getSummoner().getId())) {
-              unPulledSummonerIds.add(p.getSummoner().getId());
+        if (newMatch != null && newMatch.getParticipants() != null) {
+          try {
+            for (Participant p : newMatch.getParticipants()) {
+              if (!pulledSummonerIds.contains(p.getSummoner().getId())) {
+                unPulledSummonerIds.add(p.getSummoner().getId());
+              }
             }
+          } catch (Exception e) {
+            log.error(e.getMessage(), e);
           }
         }
         unPulledMatchIds.remove(newMatchId);

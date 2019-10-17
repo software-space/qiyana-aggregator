@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS Champion_Stats CASCADE;
 CREATE TABLE Summoner
 (
   accountId     varchar(56),
-  name          varchar(255),
+  name          varchar(255) UNIQUE,
   puuid         varchar(78),
   profileIconId integer,
   summonerLevel bigint,

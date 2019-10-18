@@ -37,7 +37,6 @@ public class SQLLeagueEntryRepositoryImpl implements SQLLeagueEntryRepository {
     dsl.update(LEAGUE_ENTRY)
         .set(LEAGUE_ENTRY.QUEUEID, dto.getQueueId())
         .set(LEAGUE_ENTRY.RANKID, dto.getRankId())
-        .set(LEAGUE_ENTRY.ACCOUNTID, dto.getAccountId())
         .set(LEAGUE_ENTRY.TIERID, dto.getTierId())
         .set(LEAGUE_ENTRY.FRESHBLOOD, dto.isFreshBlood())
         .set(LEAGUE_ENTRY.HOTSTREAK, dto.isHotStreak())
@@ -46,7 +45,9 @@ public class SQLLeagueEntryRepositoryImpl implements SQLLeagueEntryRepository {
         .set(LEAGUE_ENTRY.LEAGUEPOINTS, dto.getLeaguePoints())
         .set(LEAGUE_ENTRY.LOSSES, dto.getLosses())
         .set(LEAGUE_ENTRY.VETERAN, dto.isVeteran())
-        .set(LEAGUE_ENTRY.WINS, dto.getWins()).execute();
+        .set(LEAGUE_ENTRY.WINS, dto.getWins())
+        .where(LEAGUE_ENTRY.ACCOUNTID.eq( dto.getAccountId()))
+        .execute();
     return findByAccountId(dto.getAccountId());
   }
 

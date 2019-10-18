@@ -6,4 +6,6 @@ import ca.softwarespace.qiyanna.dataaggregator.models.exceptions.RecordNotFoundE
 public interface SQLTierRepository {
 
   TierDto findByTierName(String tierName) throws RecordNotFoundException;
+
+  TierDto findById(int id) throws RecordNotFoundException;
 }

@@ -26,6 +26,7 @@ public class SQLAggregatorInfoRepositoryImpl implements SQLAggregatorInfoReposit
   public AggregatorInfoDto update(AggregatorInfoDto dto) throws RecordNotFoundException {
     dsl.update(AGGREGATOR_INFO)
         .set(AGGREGATOR_INFO.COUNT, dto.getCount())
+        .where(AGGREGATOR_INFO.ID.eq(dto.getId()))
         .execute();
     return findById(dto.getId());
   }

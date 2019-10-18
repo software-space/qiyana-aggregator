@@ -1,7 +1,7 @@
 package ca.softwarespace.qiyanna.dataaggregator.events;
 
-import java.util.HashSet;
-import java.util.List;
+import com.merakianalytics.orianna.types.common.Region;
+import java.util.HashMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.ApplicationEvent;
@@ -10,13 +10,12 @@ import org.springframework.context.ApplicationEvent;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UpdateMatchesEvent extends ApplicationEvent {
-  private HashSet<String> summonersToCollect;
-  private String regionName;
 
-  public UpdateMatchesEvent(Object source, HashSet<String>summonersToCollect, String regionName){
+  private HashMap<String, Region> summonersToCollect;
+
+  public UpdateMatchesEvent(Object source, HashMap<String, Region> summonersToCollect) {
     super(source);
     this.summonersToCollect = summonersToCollect;
-    this.regionName = regionName;
   }
 
 }

@@ -35,8 +35,9 @@ import com.merakianalytics.orianna.types.core.match.MatchHistory;
 import com.merakianalytics.orianna.types.core.match.Participant;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -94,6 +95,9 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
       if (infoDto.getCount() == 0) {
         defaultSummoners.forEach(df -> prepareDataCollection(df.getName(), df.getRegionName(),
             SeasonsEnum.SEASON_2018.getSeasonId()));
+      } else {
+        DataCollectionEvent collectionEvent = new DataCollectionEvent(this, "this is a test");
+        eventPublisher.publishEvent(collectionEvent);
       }
       infoDto.setCount(infoDto.getCount() + 1);
       sqlAggregatorInfoRepository.update(infoDto);
@@ -110,7 +114,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     long seasonStartTime = getPatchStartTime(regionName, startSeasonId) * Constants.SECOND_TO_MILLI;
     Region region = RegionEnum.getRegionByTag(regionName);
     Summoner summoner = Orianna.summonerNamed(summonerName).withRegion(region).get();
-    collectMatches(summoner, region, seasonStartTime);
+    collectMatches(summoner, seasonStartTime);
     DataCollectionEvent collectionEvent = new DataCollectionEvent(this, "this is a test");
     eventPublisher.publishEvent(collectionEvent);
   }
@@ -121,7 +125,7 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     long seasonStartTime =
         getPatchStartTime(region.getTag(), Season.getLatest().getId()) * Constants.SECOND_TO_MILLI;
     Summoner summoner = Orianna.summonerWithAccountId(accountId).withRegion(region).get();
-    collectMatches(summoner, region, seasonStartTime);
+    collectMatches(summoner, seasonStartTime);
     DataCollectionEvent collectionEvent = new DataCollectionEvent(this, "this is a test");
     eventPublisher.publishEvent(collectionEvent);
   }
@@ -162,8 +166,8 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
   }
 
   private void updateMatchesForSummoner(Summoner summoner, Region region) {
-    HashSet<String> summonersToPull = new HashSet<>();
-    HashSet<Long> unPulledMatchIds = new HashSet<>();
+    HashMap<String, Region> summonersToPull = new HashMap<>();
+    HashMap<Long, Region> unPulledMatchs = new HashMap<>();
 
     DateTime startUpdateTime = createOrUpdateSummonerRecord(
         sqlSummonerRepository.convertSummonerOriannaToDto(summoner));
@@ -172,36 +176,36 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
     MatchHistory matches = filterMatchHistory(summoner, millsToDateTime(seasonStartTime),
         startUpdateTime);
     for (Match match : matches) {
-      unPulledMatchIds.add(match.getId());
+      unPulledMatchs.putIfAbsent(match.getId(), match.getRegion());
     }
-    while (!unPulledMatchIds.isEmpty()) {
-      long newMatchId = unPulledMatchIds.iterator().next();
-      Match newMatch = Match.withId(newMatchId).withRegion(region).get();
+    while (!unPulledMatchs.isEmpty()) {
+      Entry<Long, Region> match = unPulledMatchs.entrySet().iterator().next();
+      Match newMatch = Match.withId(match.getKey()).withRegion(match.getValue()).get();
       for (Participant p : newMatch.getParticipants()) {
         if (!summoner.getAccountId().equals(p.getSummoner().getAccountId())) {
-          summonersToPull.add(p.getSummoner().getId());
+          summonersToPull.putIfAbsent(p.getSummoner().getId(), p.getSummoner().getRegion());
         }
       }
-      unPulledMatchIds.remove(newMatchId);
+      unPulledMatchs.remove(match.getKey());
     }
-    UpdateMatchesEvent updateMatchesEvent = new UpdateMatchesEvent(this, summonersToPull,
-        region.getTag());
+    UpdateMatchesEvent updateMatchesEvent = new UpdateMatchesEvent(this, summonersToPull);
     eventPublisher.publishEvent(updateMatchesEvent);
   }
 
-  private void collectMatches(Summoner summoner, Region region, long seasonStartTime) {
-    HashSet<String> unPulledSummonerIds = new HashSet<>();
-    unPulledSummonerIds.add(summoner.getId());
+  private void collectMatches(Summoner summoner, long seasonStartTime) {
+    HashMap<String, Region> unPulledSummoner = new HashMap<>();
+    unPulledSummoner.putIfAbsent(summoner.getId(), summoner.getRegion());
 
-    HashSet<String> pulledSummonerIds = new HashSet<>();
-    HashSet<Long> unPulledMatchIds = new HashSet<>();
-    HashSet<Long> pulledMatchIds = new HashSet<>();
+    HashMap<String, Region> pulledSummoner = new HashMap<>();
+    HashMap<Long, Region> unPulledMatch = new HashMap<>();
+    HashMap<Long, Region> pulledMatch = new HashMap<>();
 
-    while (!unPulledSummonerIds.isEmpty()) {
+    while (!unPulledSummoner.isEmpty()) {
 
-      final String newSummonerId = unPulledSummonerIds.iterator().next();
+      final Entry<String, Region> newSummonerId = unPulledSummoner.entrySet().iterator().next();
 
-      final Summoner newSummoner = Summoner.withId(newSummonerId).withRegion(region).get();
+      final Summoner newSummoner = Summoner.withId(newSummonerId.getKey())
+          .withRegion(newSummonerId.getValue()).get();
       final MatchHistory matches;
       DateTime startUpdateTime = createOrUpdateSummonerRecord(
           sqlSummonerRepository.convertSummonerOriannaToDto(newSummoner));
@@ -210,29 +214,29 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
       createOrUpdateLeagueEntry(newSummoner);
 
       for (final Match match : matches) {
-        if (!pulledMatchIds.contains(match.getId())) {
-          unPulledMatchIds.add(match.getId());
+        if (!pulledMatch.containsKey(match.getId())) {
+          unPulledMatch.putIfAbsent(match.getId(), match.getRegion());
         }
       }
-      unPulledSummonerIds.remove(newSummonerId);
-      pulledSummonerIds.add(newSummonerId);
+      unPulledSummoner.remove(newSummonerId.getKey());
+      pulledSummoner.put(newSummonerId.getKey(), newSummonerId.getValue());
 
-      while (!unPulledMatchIds.isEmpty()) {
-        long newMatchId = unPulledMatchIds.iterator().next();
-        Match newMatch = Match.withId(newMatchId).withRegion(region).get();
-        if (newMatch != null && newMatch.getParticipants() != null) {
-          try {
+      while (!unPulledMatch.isEmpty()) {
+        Entry<Long, Region> newMatchId = unPulledMatch.entrySet().iterator().next();
+        Match newMatch = Match.withId(newMatchId.getKey()).withRegion(newMatchId.getValue()).get();
+        try {
+          if (newMatch != null && newMatch.getParticipants() != null) {
             for (Participant p : newMatch.getParticipants()) {
-              if (!pulledSummonerIds.contains(p.getSummoner().getId())) {
-                unPulledSummonerIds.add(p.getSummoner().getId());
+              if (!pulledSummoner.containsKey(p.getSummoner().getId())) {
+                unPulledSummoner.putIfAbsent(p.getSummoner().getId(), p.getSummoner().getRegion());
               }
             }
-          } catch (Exception e) {
-            log.error(e.getMessage(), e);
           }
+        } catch (Exception e) {
+          log.error(e.getMessage(), e);
         }
-        unPulledMatchIds.remove(newMatchId);
-        pulledMatchIds.add(newMatchId);
+        unPulledMatch.remove(newMatchId.getKey());
+        pulledMatch.putIfAbsent(newMatchId.getKey(), newMatchId.getValue());
       }
     }
   }
@@ -294,8 +298,9 @@ public class MatchesCollectionServiceImpl implements MatchesCollectionService {
 
   @Override
   public void onApplicationEvent(UpdateMatchesEvent updateMatchesEvent) {
-    HashSet<String> accountIds = updateMatchesEvent.getSummonersToCollect();
-    String regionName = updateMatchesEvent.getRegionName();
-    accountIds.forEach(s -> prepareDataCollection(s, regionName));
+    HashMap<String, Region> accounts = updateMatchesEvent.getSummonersToCollect();
+    for (Map.Entry<String, Region> entry : accounts.entrySet()) {
+      prepareDataCollection(entry.getKey(), entry.getValue().getTag());
+    }
   }
 }

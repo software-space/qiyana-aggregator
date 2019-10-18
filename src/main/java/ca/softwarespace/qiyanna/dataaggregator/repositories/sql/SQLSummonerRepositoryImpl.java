@@ -41,7 +41,8 @@ public class SQLSummonerRepositoryImpl implements SQLSummonerRepository {
         .set(SUMMONER.SUMMONERLEVEL, dto.getSummonerLevel())
         .set(SUMMONER.PROFILEICONID, dto.getProfileIconId())
         .set(SUMMONER.PUUID, dto.getPuuid())
-        .set(SUMMONER.REVISIONDATE, dto.getRevisionDate()).execute();
+        .set(SUMMONER.REVISIONDATE, dto.getRevisionDate())
+        .where(SUMMONER.ACCOUNTID.equalIgnoreCase(dto.getAccountId())).execute();
     return findByAccountId(dto.getAccountId());
   }
 

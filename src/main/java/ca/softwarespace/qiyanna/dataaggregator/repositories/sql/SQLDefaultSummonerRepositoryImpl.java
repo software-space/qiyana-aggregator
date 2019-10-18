@@ -28,10 +28,10 @@ public class SQLDefaultSummonerRepositoryImpl implements SQLDefaultSummonerRepos
   public List<DefaultSummonerDto> findAll() {
     List<DefaultSummonerNameRecord> queryResults = dsl.selectFrom(DEFAULT_SUMMONER_NAME)
         .fetchInto(DefaultSummonerNameRecord.class);
-    return queryResults.stream().map(this::convertRecorfToDto).collect(Collectors.toList());
+    return queryResults.stream().map(this::convertRecordToDto).collect(Collectors.toList());
   }
 
-  private DefaultSummonerDto convertRecorfToDto(DefaultSummonerNameRecord record) {
+  private DefaultSummonerDto convertRecordToDto(DefaultSummonerNameRecord record) {
     return DefaultSummonerDto.builder()
         .id(record.getId())
         .name(record.getName())

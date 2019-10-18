@@ -32,6 +32,16 @@ public class SQLTierRepositoryImpl implements SQLTierRepository {
     return convertRecordToDto(queryResult);
   }
 
+  @Override
+  public TierDto findById(int id) throws RecordNotFoundException {
+    TierRecord queryResult = dsl.selectFrom(TIER)
+        .where(TIER.TIERID.eq(id)).fetchOne();
+    if (queryResult == null) {
+      throw new RecordNotFoundException("There is no tier with the id : " + id);
+    }
+    return convertRecordToDto(queryResult);
+  }
+
   private TierDto convertRecordToDto(TierRecord record) {
     return TierDto.builder()
         .shortName(record.getShortname())

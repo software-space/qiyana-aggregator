@@ -110,8 +110,25 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
               .and(MATCH_DOCUMENT_PARTICIPANT_ROLE).is(role.getName().toUpperCase()));
       MatchOperation thirdMatchOperation = Aggregation
           .match(new Criteria(MATCH_DOCUMENT_PARTICIPANT_STAT_WIN).is(true));
-      return prep(firstMatchOperation, projectionOperation, secondMatchOperation,
-          thirdMatchOperation);
+      ArrayList<AggregationOperation> operations = new ArrayList<>();
+      operations.add(firstMatchOperation);
+      operations.add(projectionOperation);
+//      operations.add(secondMatchOperation);
+//      operations.add(thirdMatchOperation);
+      GroupOperation groupOperation = Aggregation.group().count().as(RESULT_KEY);
+      operations.add(groupOperation);
+
+      Aggregation aggregation = Aggregation.newAggregation(operations);
+      AggregationResults<CalculationResult> results = mongoTemplate
+          .aggregate(aggregation, "dto.match.Match", CalculationResult.class);
+
+      int i = 0;
+      while (results.iterator().hasNext()) {
+        i++;
+        System.out.println(results.iterator().next().getResult() +" Level: " + i);
+      }
+
+      return results.iterator().next().getResult();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
@@ -150,8 +167,25 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
               .and(MATCH_DOCUMENT_PARTICIPANT_TIER).is(tier.getShortName().toUpperCase()));
       MatchOperation thirdMatchOperation = Aggregation
           .match(new Criteria(MATCH_DOCUMENT_PARTICIPANT_STAT_WIN).is(false));
-      return prep(firstMatchOperation, projectionOperation, secondMatchOperation,
-          thirdMatchOperation);
+      GroupOperation groupOperation = Aggregation.group().count().as(RESULT_KEY);
+
+      ArrayList<AggregationOperation> operations = new ArrayList<>();
+      operations.add(firstMatchOperation);
+      operations.add(projectionOperation);
+      operations.add(secondMatchOperation);
+      operations.add(thirdMatchOperation);
+      operations.add(groupOperation);
+
+      Aggregation aggregation = Aggregation.newAggregation(operations);
+      AggregationResults<CalculationResult> results = mongoTemplate
+          .aggregate(aggregation, "dto.match.Match", CalculationResult.class);
+
+      int i = 0;
+      while (results.iterator().hasNext()) {
+        i++;
+        System.out.println(results.iterator().next().getResult() +" Level: " + i);
+      }
+      return results.iterator().next().getResult();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
@@ -188,8 +222,8 @@ public class StatsCalculatorServiceImpl implements StatsCalculatorService {
   private void orchestrator() {
     double totalMatches =  mongoTemplate.getCollection("dto.match.Match").countDocuments();
     Orianna.getChampions().stream().forEach(champion -> {
-      double wins = calculateChampionWins(champion.getId(), 420, 3, 4, 4, "NA");
-      double losses = calculateChampionLosses(champion.getId(), 420, 3, 4, 4, "NA");
+      double wins = calculateChampionWins(57, 420, 3, 4, 4, "NA");
+      double losses = calculateChampionLosses(57, 420, 3, 4, 4, "NA");
       double winRate = wins / (wins+losses);
       double pickRate = (wins+losses) / totalMatches; // TODO: this shuold be depending on the Tier and queue
       double banRate = 0.20; // TODO: work on a way to calculate the ban rate

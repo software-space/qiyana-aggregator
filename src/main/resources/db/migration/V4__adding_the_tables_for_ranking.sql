@@ -12,7 +12,7 @@ CREATE TABLE League_entry
 (
   leagueEntryId serial,
   queueId       integer REFERENCES queue (queueId),
-  summonerId    varchar(56) REFERENCES summoner (accountId),
+  accountId     varchar(56) REFERENCES summoner (accountId),
   wins          integer,
   hotStreak     boolean,
   veteran       boolean,

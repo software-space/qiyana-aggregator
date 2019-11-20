@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChampionDto {
-  private int id;
-  private String name;
+public class TierDto {
+
+  private int tierId;
+  private String shortName;
 }

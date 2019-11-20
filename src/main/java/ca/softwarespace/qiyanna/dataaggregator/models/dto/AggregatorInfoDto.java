@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChampionDto {
+public class AggregatorInfoDto {
   private int id;
-  private String name;
+  private int count;
 }
